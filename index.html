@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OICL Premium Calculator V30.0 · Motor · Fire &amp; Theft · PA · Mediclaim</title>
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="styles-pro.css" />
+<link rel="stylesheet" href="styles-other.css" />
+<style>
+/* DD-MM-YYYY date field enhancements */
+.date-field-wrap { position: relative; }
+.date-field-wrap input.date-input {
+  padding-right: 42px;
+  letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.date-field-wrap .date-icon {
+  position: absolute;
+  right: 12px;
+  bottom: 11px;
+  font-size: 14px;
+  color: var(--text-3);
+  pointer-events: none;
+}
+.date-hint {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 3px;
+  font-weight: 500;
+}
+.date-hint b { color: var(--accent); }
+input.date-input.is-valid { border-color: #10b981 !important; background: #f0fdf4 !important; }
+input.date-input.is-invalid { border-color: #ef4444 !important; background: #fef2f2 !important; }
+.quote-meta { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 900px) { .quote-meta { grid-template-columns: repeat(2, 1fr); } }
+.date-badge {
+  display:inline-block; font-size:10px; font-weight:700; background:#fff7ed; color:#b45309;
+  padding:2px 8px; border-radius:6px; margin-left:6px; border:1px solid #fde68a;
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile Menu Button -->
+<button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">☰</button>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="app-shell">
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo-circle">OIC</div>
+      <div>
+        <div class="brand-title">ORIENTAL INSURANCE</div>
+        <div class="brand-sub">OICL Premium Calculator · V30.0</div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Products</div>
+      <button class="nav-item active" data-tab="calc">
+        <span class="nav-icon">🚗</span> <span>Motor</span>
+      </button>
+      <button class="nav-item" data-tab="fire" data-op="fire">
+        <span class="nav-icon">🔥</span> <span>Fire &amp; Theft</span>
+      </button>
+      <button class="nav-item" data-tab="pa" data-op="pa">
+        <span class="nav-icon">🧍</span> <span>Personal Accident</span>
+      </button>
+      <button class="nav-item" data-tab="med" data-op="med">
+        <span class="nav-icon">🏥</span> <span>Mediclaim</span>
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Workspace</div>
+      <button class="nav-item" data-tab="quote">
+        <span class="nav-icon">📄</span> <span>Quotation</span>
+      </button>
+      <button class="nav-item" data-tab="history">
+        <span class="nav-icon">🕘</span> <span>History</span>
+        <span class="nav-badge" id="historyCount" style="display:none;">0</span>
+      </button>
+      <button class="nav-item" data-tab="about">
+        <span class="nav-icon">ℹ️</span> <span>About</span>
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-card">
+        <strong>Revision Notes</strong>
+        <div class="footer-meta">OICL Premium Calculator V30.0</div>
+        <div class="footer-meta" id="revisionDate" style="margin-top:6px; font-weight:700; color:#fbbf24;"></div>
+        <div class="footer-meta" style="margin-top:10px;">Customized by <strong style="color:#fbbf24;">Mohit sharma</strong></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========== MAIN ========== -->
+  <main class="main">
+
+    <div class="top-bar">
+      <div class="page-title">
+        <span id="pageTitleMain">Motor Premium Calculator</span>
+        <small id="pageTitleSub">Own Damage (OD) &amp; Third Party (TP) Premium Calculator</small>
+      </div>
+      <div class="top-actions">
+        <div class="live-pill">
+          <span class="live-dot"></span>
+          Live · Updated <span id="liveUpdateDate">01-07-2026</span>
+        </div>
+        <button class="pro-top-btn" id="newQuoteBtn" title="Start a fresh quote">📝 New Quote</button>
+        <button class="pro-top-btn" id="themeToggle" title="Toggle dark / light mode" aria-pressed="false">🌙 Dark</button>
+      </div>
+    </div>
+
+    <!-- ============== TAB · CALCULATOR ============== -->
+    <section class="tab-content active" id="tab-calc">
+      <div class="stepper" aria-label="Quote progress">
+        <div class="stepper-row">
+          <div class="step" id="step1"><span class="step-dot"><span>1</span></span><span class="step-label">🚗 Vehicle</span></div>
+          <div class="step-sep"></div>
+          <div class="step" id="step2"><span class="step-dot"><span>2</span></span><span class="step-label">📋 Policy &amp; IDV</span></div>
+          <div class="step-sep"></div>
+          <div class="step" id="step3"><span class="step-dot"><span>3</span></span><span class="step-label">🛡️ Covers</span></div>
+          <div class="step-sep"></div>
+          <div class="step" id="step4"><span class="step-dot"><span>4</span></span><span class="step-label">✅ Quote</span></div>
+        </div>
+        <div class="step-bar"><div class="step-bar-fill" id="stepBarFill"></div></div>
+      </div>
+      <div class="grid">
+
+        <!-- ===== LEFT · INPUTS ===== -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-icon">🚗</div>
+              Vehicle &amp; Policy Details
+            </div>
+            
+          </div>
+
+          <!-- Section 1: Vehicle -->
+          <div class="form-section">
+            <div class="form-section-title">Vehicle Information</div>
+            <div class="section-grid">
+
+              <div class="field">
+                <label>Vehicle Type</label>
+                <select id="vehicleType">
+                  <option value="" selected disabled>-- Select --</option>
+                  <optgroup label="Private Car">
+                    <option value="pvtCar">Private Car (Petrol / Diesel)</option>
+                    <option value="evPvtCar">Electric Pvt Car</option>
+                  </optgroup>
+                  <optgroup label="Two Wheeler">
+                    <option value="twoWheeler">Two Wheeler (2W)</option>
+                    <option value="evTwoWheeler">Electric 2-Wheeler</option>
+                  </optgroup>
+                  <optgroup label="Taxi">
+                    <option value="taxi">Taxi / PCCV (&#8804;6 seats)</option>
+                  </optgroup>
+                  <optgroup label="Bus / PCCV">
+                    <option value="schoolBus">School Bus</option>
+                    <option value="staffBus">Staff Bus</option>
+                    <option value="pccvSmall">PCCV (6&ndash;17 seats)</option>
+                    <option value="pccvMedium">PCCV (17&ndash;36 seats)</option>
+                    <option value="pccvLarge">PCCV (Above 36 seats)</option>
+                  </optgroup>
+                  <optgroup label="Class D">
+                    <option value="ambulance">Ambulance</option>
+                    <option value="miscD">Misc &ndash; Domestic (MISC D)</option>
+                  </optgroup>
+                  <optgroup label="Goods Vehicle">
+                    <option value="gccv">Goods Vehicle &ndash; GCCV (by GVW)</option>
+                    <option value="gccv3w">GCCV 3-Wheeler (Goods Carrier)</option>
+                  </optgroup>
+                  <optgroup label="3-Wheeler">
+                    <option value="auto" disabled>Auto Rickshaw (3W)</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Fuel Type</label>
+                <select id="fuelType">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="Petrol">Petrol</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="CNG">CNG / LPG</option>
+                  <option value="Electric">Electric</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label id="ccLabel">Cubic Capacity (CC)</label>
+                <input type="number" id="cc" value="" min="0" placeholder="Enter CC" />
+                <span id="ccHint" style="font-size:10px;color:var(--text-3);margin-top:2px;">Enter CC for cars / 2W, Seats for buses, GVW (kg) for goods vehicles</span>
+              </div>
+
+              <div class="field">
+                <label>Seating Capacity (incl. driver)</label>
+                <input type="number" id="seating" value="" min="0" placeholder="Enter seating capacity" />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 2: Policy -->
+          <div class="form-section">
+            <div class="form-section-title">Policy Type &amp; Term</div>
+            <div class="section-grid">
+
+              <div class="field">
+                <label>Policy Type</label>
+                <select id="policyType">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="package">Package Policy</option>
+                  <option value="bundle">Bundle Policy (3yr Car / 5yr 2W)</option>
+                  <option value="saod">Standard OD (SAOD)</option>
+                  <option value="liability">Liability Only (TP)</option>
+                </select>
+              </div>
+
+              <div class="field" id="policyTermField" style="display:none;">
+                <label>Policy Term</label>
+                <select id="policyTerm">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">1 Year</option>
+                  <option value="3">3 Year</option>
+                  <option value="5">5 Year (2W only)</option>
+                </select>
+              </div>
+
+              <div class="field date-field-wrap">
+                <label>Date of Registration <span style="color:#b45309">DD-MM-YYYY</span></label>
+                <input type="text" id="dor" class="date-input" value="" placeholder="DD-MM-YYYY" maxlength="10" inputmode="numeric" autocomplete="off" />
+                <span class="date-icon">📅</span>
+                <span class="date-hint">Format: <b>DD-MM-YYYY</b> &nbsp; Ex: 03-06-2022</span>
+              </div>
+
+              <div class="field date-field-wrap">
+                <label>Policy Start Date <span style="color:#b45309">DD-MM-YYYY</span></label>
+                <input type="text" id="policyDate" class="date-input" value="" placeholder="DD-MM-YYYY" maxlength="10" inputmode="numeric" autocomplete="off" />
+                <span class="date-icon">📅</span>
+                <span class="date-hint">Format: <b>DD-MM-YYYY</b> &nbsp; Ex: 01-07-2026 &nbsp; <a href="#" id="todayBtn" style="color:#2563eb;font-weight:700;text-decoration:none;">Today →</a></span>
+              </div>
+
+              <div class="field">
+                <label>Zone (A: Metro cities, B: Other state capitals, C: Rest of India)</label>
+                <select id="zone">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="A">Zone A — Mumbai, Delhi, Chennai, Kolkata, Bangalore, Hyderabad, Ahmedabad, Pune</option>
+                  <option value="B">Zone B — Rest of State Capitals</option>
+                  <option value="C">Zone C — Rest of India</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>State (for Commission calculation)</label>
+                <select id="state">
+                  <option value="" selected>-- Select State --</option>
+                  <option value="Andhra Pradesh">Andhra Pradesh</option>
+                  <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                  <option value="Assam">Assam</option>
+                  <option value="Bihar">Bihar</option>
+                  <option value="Chhattisgarh">Chhattisgarh</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Goa">Goa</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Haryana">Haryana</option>
+                  <option value="Himachal Pradesh">Himachal Pradesh</option>
+                  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                  <option value="Jharkhand">Jharkhand</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Kerala">Kerala</option>
+                  <option value="Ladakh">Ladakh</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Manipur">Manipur</option>
+                  <option value="Meghalaya">Meghalaya</option>
+                  <option value="Mizoram">Mizoram</option>
+                  <option value="Nagaland">Nagaland</option>
+                  <option value="Odisha">Odisha</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Sikkim">Sikkim</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Telangana">Telangana</option>
+                  <option value="Tripura">Tripura</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Uttarakhand">Uttarakhand</option>
+                  <option value="West Bengal">West Bengal</option>
+                </select>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 3: Valuation -->
+          <div class="form-section">
+            <div class="form-section-title">Valuation</div>
+            <div class="section-grid">
+
+              <div class="field">
+                <label>Invoice Price (₹)</label>
+                <input type="number" id="invoice" value="" min="0" placeholder="Enter Invoice Price" />
+              </div>
+
+              <div class="field">
+                <label>IDV of Vehicle (₹)</label>
+                <input type="number" id="idv" value="" min="0" placeholder="Enter IDV" />
+                <button type="button" class="mini-btn" id="autoIdv">AUTO</button>
+              </div>
+
+              <div class="field">
+                <label>IDV of Non-Elec. Accessories (₹)</label>
+                <input type="number" id="idvNonElec" value="0" min="0" />
+              </div>
+
+              <div class="field">
+                <label>IDV of Elec. Accessories (₹)</label>
+                <input type="number" id="idvElec" value="0" min="0" />
+              </div>
+
+              <div class="field">
+                <label>GST Rate (%)</label>
+                <input type="number" id="gst" value="18" min="0" max="28" />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 3B: Insured / Customer Details -->
+          <div class="form-section">
+            <div class="form-section-title">Insured / Customer Details</div>
+            <div class="section-grid">
+              <div class="field">
+                <label>Insured Name</label>
+                <input type="text" id="insuredName" value="" placeholder="Enter insured / customer name" />
+              </div>
+              <div class="field">
+                <label>Vehicle Reg. No. <span style="color:#b45309; text-transform:none;">(e.g. PB-10-AB-1234)</span></label>
+                <input type="text" id="regNo" value="" placeholder="Enter vehicle registration number" style="text-transform:uppercase;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Discounts -->
+          <div class="form-section">
+            <div class="form-section-title">Discounts</div>
+            <div class="section-grid">
+
+              <div class="field">
+                <label>NCB % (No Claim Bonus)</label>
+              <select id="ncb">
+                <option value="" selected disabled>-- Select --</option>
+                <option value="0">0 %</option>
+                <option value="20">20 %</option>
+                <option value="25">25 %</option>
+                <option value="35">35 %</option>
+                <option value="45">45 %</option>
+                <option value="50">50 %</option>
+              </select>
+              </div>
+
+              <div class="field">
+                <label>U/W Discount %</label>
+                <input type="number" id="uwDiscount" value="" min="0" max="95" placeholder="Enter U/W Discount %" />
+              </div>
+
+              <div class="field">
+                <label>Anti-Theft Discount?</label>
+                <select id="antiTheft">
+                  <option value="No" selected>No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>NIL Dep. Discount %</label>
+                <input type="number" id="ndDiscount" value="" min="0" max="40" placeholder="Enter NIL Dep Discount %" />
+              </div>
+
+              <div class="field">
+                <label>NIL Dep. Renewal Disc. %</label>
+                <input type="number" id="ndRenDiscount" value="0" min="0" max="5" />
+              </div>
+
+              <div class="field">
+                <label>Add-on Discount %</label>
+                <input type="number" id="addOnDiscount" value="0" min="0" max="0" disabled />
+              </div>
+
+            </div>
+          </div>
+
+
+          <!-- Section 5: OD Add-ons -->
+          <div class="form-section" id="odAddonsSection">
+            <div class="form-section-title">OD Add-on Covers</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="nilDep" /> <span id="nilDepText">NIL Depreciation Cover</span></label>
+              <label class="cb-row"><input type="checkbox" id="engineProt" /> <span>Engine Protection Cover</span></label>
+              <label class="cb-row"><input type="checkbox" id="consumables" /> <span>Consumables Cover</span></label>
+              <label class="cb-row"><input type="checkbox" id="keyRepl" /> <span>Key Replacement Cover</span></label>
+              <label class="cb-row"><input type="checkbox" id="rti" /> <span>Return to Invoice Cover</span></label>
+              <label class="cb-row"><input type="checkbox" id="tyreRim" /> <span>Tyre &amp; Rim Protection</span></label>
+              <label class="cb-row"><input type="checkbox" id="altCar" /> <span>Alternative Car Benefit</span></label>
+              <label class="cb-row"><input type="checkbox" id="batteryProt" /> <span>Battery Protection</span></label>
+              <label class="cb-row"><input type="checkbox" id="emiProt" /> <span>EMI Protection</span></label>
+              <label class="cb-row"><input type="checkbox" id="persBelong" /> <span>Loss of Personal Belongings</span></label>
+              <div class="field" id="persBelongSIField" style="display:none; grid-column: 1 / -1; margin-top:-6px; padding-left:8px; border-left:3px solid #4f46e5; background:#f0fdf4; border-radius:6px;">
+                <label style="font-size:10px; font-weight:700; color:#1e40af;">Sum Insured</label>
+                <select id="persBelongSI" style="padding:7px 10px; font-size:13px; width:100%; max-width:220px;">
+                  <option value="5000">₹ 5,000 (Premium: ₹400)</option>
+                  <option value="10000">₹ 10,000 (Premium: ₹650)</option>
+                </select>
+              </div>
+              <label class="cb-row"><input type="checkbox" id="elecAcc" /> <span>Electrical Accessories</span></label>
+              <label class="cb-row"><input type="checkbox" id="cngKit" /> <span>CNG / LPG Kit Cover (OD + TP)</span></label>
+              <label class="cb-row"><input type="checkbox" id="towing" /> <span>Additional Towing Charges</span></label>
+              <div class="field" id="towingLimitField" style="display:none; grid-column: 1 / -1; margin-top:-6px; padding-left:8px; border-left:3px solid #f59e0b; background:#fffbeb; border-radius:6px;">
+                <label style="font-size:10px; font-weight:700; color:#854d0e;">Towing SI (GCCV only)</label>
+                <select id="towingLimit" style="padding:7px 10px; font-size:13px; width:100%; max-width:220px;">
+                  <option value="10000">₹ 10,000</option>
+                  <option value="15000">₹ 15,000</option>
+                  <option value="20000">₹ 20,000</option>
+                </select>
+                <div style="font-size:9.5px;color:#854d0e; margin-top:2px; line-height:1.1;">
+                  ≤ ₹15,000 → <strong>5%</strong> &nbsp;&nbsp; | &nbsp;&nbsp; ₹15,001–20,000 → <strong>7.5%</strong>
+                </div>
+              </div>
+              <label class="cb-row"><input type="checkbox" id="geoExtOD" /> <span>Geographical Extension (OD) ₹400</span></label>
+              <label class="cb-row"><input type="checkbox" id="geoExtTP" /> <span>Geographical Extension (TP) ₹100</span></label>
+              <label class="cb-row"><input type="checkbox" id="overturning" /> <span>Overturning Cover</span></label>
+            </div>
+          </div>
+
+          <!-- Section 6: TP Covers -->
+          <div class="form-section" id="tpSection">
+            <div class="form-section-title">TP Covers &amp; Legal Liability</div>
+            <div class="section-grid">
+
+              <div class="field">
+                <label>No. of LL to Employees</label>
+                <input type="number" id="llCount" value="0" min="0" />
+              </div>
+
+              <div class="field">
+                <label>No. of LL to NFPP / Paid Driver</label>
+                <input type="number" id="llPaid" value="0" min="0" />
+              </div>
+
+            </div>
+
+            <div class="checkbox-grid" style="margin-top:12px">
+              <label class="cb-row"><input type="checkbox" id="odPa" /> <span>Owner-Driver PA Cover (CPA)</span></label>
+              <div class="field" id="cpaTermField" style="display:none; grid-column: 1 / -1; margin-top:-6px; padding:10px 12px; border-left:3px solid #0ea5e9; background:#f0f9ff; border-radius:6px;">
+                <label style="font-size:10px; font-weight:700; color:#0369a1;">CPA Term (Bundle Policy)</label>
+                <select id="cpaTerm" style="padding:7px 10px; font-size:13px; width:100%; max-width:280px;">
+                  <option value="1">1 Year</option>
+                  <option value="full">Full Term</option>
+                </select>
+                <div id="cpaTermHint" style="font-size:9.5px;color:#0369a1; margin-top:3px; line-height:1.3;">
+                  Bundle: choose 1-Year CPA or full-term CPA (3yr Car / 5yr 2W)
+                </div>
+              </div>
+              <label class="cb-row"><input type="checkbox" id="passPa" /> <span>PA Cover – Un-named Passengers</span></label>
+              <div class="field" id="passPaSIField" style="display:none; grid-column: 1 / -1; margin-top:-6px; padding-left:8px; border-left:3px solid #0ea5e9; background:#f0f9ff; border-radius:6px;">
+                <label style="font-size:10px; font-weight:700; color:#0369a1;">Sum Insured per Passenger</label>
+                <select id="passPaSI" style="padding:7px 10px; font-size:13px; width:100%; max-width:220px;">
+                  <option value="100000">₹ 1,00,000 (Premium: ₹50/passenger/yr)</option>
+                  <option value="200000">₹ 2,00,000 (Premium: ₹100/passenger/yr)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button class="btn-primary" id="calcBtn">⚡ Calculate Premium</button>
+            <button class="btn-secondary" id="resetBtn">↺ Reset</button>
+          </div>
+        </div>
+
+        <!-- ===== RIGHT · RESULTS ===== -->
+        <div class="card result-card">
+
+          <!-- Hero premium display -->
+          <div class="premium-hero">
+            <div class="hero-label">Net Premium Payable</div>
+            <div class="hero-amount">
+              <span class="currency">₹</span>
+              <span id="netAmount">0</span>
+            </div>
+            <div class="hero-breakdown">
+              <div class="hero-stat">
+                <div class="hero-stat-label">OD Premium</div>
+                <div class="hero-stat-value" id="odTotal">₹ 0</div>
+              </div>
+              <div class="hero-stat">
+                <div class="hero-stat-label">TP Premium</div>
+                <div class="hero-stat-value" id="tpTotal">₹ 0</div>
+              </div>
+              <div class="hero-stat">
+                <div class="hero-stat-label">GST @ <span id="gstPct">18</span>%</div>
+                <div class="hero-stat-value accent" id="gstAmt">₹ 0</div>
+              </div>
+            </div>
+            <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap; position:relative; z-index:1;">
+              <span class="badge-pill" id="badgeVehicle">Pvt Car</span>
+              <span class="badge-pill" id="badgePolicy">Bundled 3-Year</span>
+              <span class="badge-pill" id="badgeDates" style="background:rgba(245,158,11,.25); display:none;"></span>
+            </div>
+          </div>
+
+          <!-- Summary stats -->
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-card-label">💼 Total Premium</div>
+              <div class="stat-card-value gold" id="totalPremium">₹ 0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">✅ Basic OD Rate</div>
+              <div class="stat-card-value green" id="basicRateDisplay">3.191%</div>
+            </div>
+          </div>
+
+          <div id="calcBreakdown">
+          <div class="card-header" style="margin-top:8px">
+            <div class="card-title">
+              <div class="card-title-icon">📋</div>
+              Own Damage (OD) Breakdown
+            </div>
+          </div>
+
+          <table class="breakdown-table" id="odTable">
+            <thead>
+              <tr>
+                <th>Cover</th>
+                <th>Applied on</th>
+                <th class="right">Rate / Amount</th>
+                <th class="right">Running</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <div class="card-header" style="margin-top:24px">
+            <div class="card-title">
+              <div class="card-title-icon">🛡️</div>
+              Liability (TP) Breakdown
+            </div>
+          </div>
+
+          <table class="breakdown-table" id="tpTable">
+            <thead>
+              <tr>
+                <th>Cover</th>
+                <th>Quantity</th>
+                <th>Rate</th>
+                <th class="right">Premium</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          </div>
+          <table class="final-table">
+            <tbody>
+              <tr id="rowOdTotal"><td>Total OD</td><td class="right num" id="odTotal2">₹ 0</td></tr>
+              <tr id="rowTpTotal"><td>Total TP</td><td class="right num" id="tpTotal2">₹ 0</td></tr>
+              <tr class="bold"><td>Total Premium before GST</td><td class="right num" id="totalPremium2">₹ 0</td></tr>
+              <tr><td>GST @ <span id="gstPct2">18</span>%</td><td class="right num" id="gstAmt2">₹ 0</td></tr>
+              <tr class="grand"><td>Net Premium Payable</td><td class="right num" id="netAmount2">₹ 0</td></tr>
+              <tr class="commission-row"><td>Agent Commission <span id="commissionDetail" style="font-size:10px;color:var(--text-3);font-weight:400;"></span></td><td class="right num" id="commission">₹ 0</td></tr>
+            </tbody>
+          </table>
+
+          <button class="btn-secondary full" id="gotoQuote">📄 Generate Quotation →</button>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============== TAB · RATE CARD ============== -->
+    <section class="tab-content" id="tab-quote">
+      <div class="quote-toolbar no-print">
+        <button class="btn-secondary" id="quoteBack">← Back to Calculator</button>
+        <button class="btn-secondary" id="shareQuote">📤 Share</button>
+        <button class="btn-primary" id="printQuote">⬇️ Download PDF (1-Page)</button>
+      </div>
+
+      <div id="quoteDoc" class="quote-doc">
+        <div class="doc-watermark" aria-hidden="true"></div>
+        <div class="quote-head">
+          <div>
+            <div class="logo-circle">OIC</div>
+            <div class="brand-title">ORIENTAL INSURANCE COMPANY LTD</div>
+            
+          </div>
+          <div class="quote-no">
+            <div class="quote-no-label">Quotation</div>
+            <div id="quoteNumber" class="quote-num">0001</div>
+            <div style="font-size:10px;color:#64748b;margin-top:4px;">Date: <b id="qDateTop" style="color:#0a2540;">01-07-2026</b></div>
+          </div>
+        </div>
+
+        <div class="quote-summary">
+          <div class="qs-title">Premium Summary</div>
+          <div class="qs-grid">
+            <div class="qs-item"><span>Own Damage (OD)</span><b id="qOdTotal2">₹ 0</b></div>
+            <div class="qs-item"><span>Third Party (TP)</span><b id="qTpTotal2">₹ 0</b></div>
+            <div class="qs-item"><span>GST @ <span id="qGstPct2">18</span>%</span><b id="qGst2">₹ 0</b></div>
+            <div class="qs-item qs-grand"><span>Net Premium Payable</span><b id="qNet2">₹ 0</b></div>
+          </div>
+        </div>
+
+        <div class="quote-meta">
+          <div><strong>Insured Name</strong> <span id="qInsuredName">—</span></div>
+          <div><strong>Reg. No.</strong> <span id="qRegNo">—</span></div>
+          <div><strong>Quotation Date</strong> <span id="qDate">01-07-2026</span></div>
+          <div><strong>Vehicle</strong> <span id="qVehicle">Pvt Car</span></div>
+          <div><strong>CC / GVW</strong> <span id="qCc">1197</span></div>
+          <div><strong>Sum Insured (IDV)</strong> <span id="qSumInsured" style="color:#047857;font-weight:700;">—</span></div>
+          <div><strong>Fuel</strong> <span id="qFuel">Petrol</span></div>
+          <div><strong>Policy Type</strong> <span id="qPolicy">Long Term - Bundled</span></div>
+          <div><strong>Reg. Date</strong> <span id="qDor">03-06-2022</span></div>
+          <div><strong>Policy Start</strong> <span id="qPolicyStart" style="color:#047857;font-weight:700;">01-07-2026</span></div>
+          <div><strong>Policy End</strong> <span id="qPolicyEnd" style="color:#b45309;font-weight:700;">30-06-2027</span></div>
+          <div id="qOdPeriodWrap" style="display:none;"><strong>OD Period</strong> <span id="qOdPeriod" style="color:#0369a1;font-weight:700;">—</span></div>
+          <div id="qTpPeriodWrap" style="display:none;"><strong>TP Period</strong> <span id="qTpPeriod" style="color:#b45309;font-weight:700;">—</span></div>
+          <div><strong>State</strong> <span id="qState">—</span></div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:11px;">
+          <span id="qPeriodLabel" style="background:#fff7ed;padding:5px 10px;border-radius:8px;border:1px solid #fde68a;color:#92400e;font-weight:600;">Period: —</span>
+          <span id="qAgeLabel" style="background:#eff6ff;padding:5px 10px;border-radius:8px;border:1px solid #bfdbfe;color:#1e40af;font-weight:600;">Vehicle Age: —</span>
+        </div>
+
+        <h3 class="card-title" style="font-size:14px;margin-bottom:8px;" id="qOdHead">Own Damage Premium</h3>
+        <table class="breakdown-table" id="qOdTable">
+          <thead><tr><th>Cover</th><th>Detail</th><th class="right">Premium</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <h3 class="card-title" style="font-size:14px;margin:20px 0 8px;" id="qTpHead">Liability Premium (TP + PA)</h3>
+        <table class="breakdown-table" id="qTpTable">
+          <thead><tr><th>Cover</th><th>Quantity</th><th>Rate</th><th class="right">Premium</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <table class="final-table">
+          <tbody>
+            <tr id="qRowOdTotal"><td>Own Damage Premium (A)</td><td class="right num" id="qOdTotal">₹ 0</td></tr>
+            <tr id="qRowTpTotal"><td>Liability Premium (B)</td><td class="right num" id="qTpTotal">₹ 0</td></tr>
+            <tr class="bold"><td>Total Premium before GST</td><td class="right num" id="qTotal">₹ 0</td></tr>
+            <tr id="qGstRow"><td>GST @ <span id="qGstPct">18</span>%</td><td class="right num" id="qGst">₹ 0</td></tr>
+            <tr id="qGstSplitOd" style="display:none;"><td style="padding-left:24px; font-size:11px; color:#64748b;">↳ OD GST @ 18%</td><td class="right num" style="font-size:11px; color:#64748b;" id="qGstOdAmt">₹ 0</td></tr>
+            <tr id="qGstSplitTp" style="display:none;"><td style="padding-left:24px; font-size:11px; color:#047857; font-weight:600;">↳ TP GST @ 5%</td><td class="right num" style="font-size:11px; color:#047857; font-weight:600;" id="qGstTpAmt">₹ 0</td></tr>
+            <tr id="qGstSplitTpAddons" style="display:none;"><td style="padding-left:24px; font-size:11px; color:#64748b;">↳ TP Add-ons GST @ 18%</td><td class="right num" style="font-size:11px; color:#64748b;" id="qGstTpAddonsAmt">₹ 0</td></tr>
+            <tr class="grand"><td>Net Premium Payable</td><td class="right num" id="qNet">₹ 0</td></tr>
+          </tbody>
+        </table>
+
+        <div class="quote-foot">
+          <div class="sig-block">
+            <div>Signature</div>
+            <div class="sig-line"></div>
+          </div>
+          <div class="sig-block">
+            <div>Name of Agent / Agency Code</div>
+            <div class="sig-line"></div>
+          </div>
+          <div class="sig-block">
+            <div>Branch / Divisional Manager</div>
+            <div class="sig-line"></div>
+          </div>
+        </div>
+
+        <div class="disclaimer">
+          Disclaimer: Premiums computed are indicative and based on publicly notified IRDAI rates &amp;
+          standard Oriental Insurance add-on loading factors. Final premium is subject to underwriting,
+          inspection &amp; GST rules in force on the date of policy issuance.<br>
+          <strong>NCB is applicable only if no claim was reported in the previous policy year.</strong><br>
+          <strong>Generated: <span id="qGeneratedAt">01-07-2026</span> · Customized by Mohit Sharma</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== TAB · HISTORY ============== -->
+    <section class="tab-content" id="tab-history">
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon">🕘</div>
+            Saved Quotes &amp; History
+          </div>
+          <span class="kbd-hint"><kbd>Alt</kbd>+<kbd>H</kbd> history · <kbd>Alt</kbd>+<kbd>C</kbd> calculator · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> calculate</span>
+        </div>
+        <div class="h-stats">
+          <div class="h-stat"><div class="h-stat-label">Total Quotes</div><div class="h-stat-value" id="hStatTotal">0</div></div>
+          <div class="h-stat"><div class="h-stat-label">This Month</div><div class="h-stat-value" id="hStatMonth">0</div></div>
+          <div class="h-stat"><div class="h-stat-label">Total Premium</div><div class="h-stat-value" id="hStatPremium">₹0</div></div>
+          <div class="h-stat"><div class="h-stat-label">Avg. Premium</div><div class="h-stat-value" id="hStatAvg">₹0</div></div>
+        </div>
+        <div class="history-toolbar">
+          <div class="h-search"><input type="text" id="hSearch" placeholder="Search reg. no, name, vehicle, product, quote no, premium…" autocomplete="off" /></div>
+          <select class="h-filter" id="hFilterProduct" title="Show one product's quotes only"></select>
+          <select class="h-filter" id="hFilterPolicy">
+            <option value="all">All policies</option>
+            <option value="package">Package Policy</option>
+            <option value="bundle">Bundle Policy</option>
+            <option value="saod">Standard OD</option>
+            <option value="liability">Liability Only</option>
+          </select>
+          <select class="h-filter" id="hFilterVehicle">
+            <option value="all">All vehicles</option>
+            <option value="privateCar">Private Car</option>
+            <option value="twoWheeler">Two Wheeler</option>
+            <option value="taxi">Taxi</option>
+            <option value="pccv">PCCV / Bus</option>
+            <option value="classD">Class D</option>
+            <option value="gccv">GCCV</option>
+            <option value="gccv3w">GCCV 3W</option>
+          </select>
+          <select class="h-filter" id="hFilterPeriod">
+            <option value="all">All time</option>
+            <option value="today">Today</option>
+            <option value="week">Last 7 days</option>
+            <option value="month">This month</option>
+          </select>
+          <select class="h-filter" id="hSort">
+            <option value="new">Newest first</option>
+            <option value="old">Oldest first</option>
+            <option value="high">Premium: high → low</option>
+            <option value="low">Premium: low → high</option>
+          </select>
+        </div>
+        <div class="h-list-head">
+          <span class="h-result-count" id="hResultCount"></span>
+          <div class="h-bulk">
+            <span class="h-storage" id="hStorage"></span>
+            <button class="h-mini-btn" id="hSaveCurrent" title="Save the current calculation">💾 Save current</button>
+            <button class="h-mini-btn" id="hExportCsv">⬇️ CSV</button>
+            <button class="h-mini-btn" id="hExportJson">⬇️ JSON</button>
+            <button class="h-mini-btn danger" id="hClearAll">🧹 Clear all</button>
+          </div>
+        </div>
+      </div>
+      <div class="history-grid" id="historyList"></div>
+      <p style="font-size:11px;color:var(--text-3);margin-top:14px;">🔒 History is stored privately in this browser (localStorage) — nothing is uploaded. Export CSV regularly as backup.</p>
+    </section>
+
+    <!-- ============== TAB · FIRE & THEFT ============== -->
+    <section class="tab-content" id="tab-fire">
+      <div class="op-tabs">
+        <button class="op-tab active" data-op="fire">🔥 Fire</button>
+        <button class="op-tab" data-op="theft">🔐 Theft / Burglary</button>
+      </div>
+
+      <div class="op-pane active" id="op-fire">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">🔥</div> Fire &amp; Special Perils</div></div>
+
+          <div class="form-section">
+            <div class="form-section-title">Sum Insured</div>
+            <div class="section-grid">
+              <div class="field"><label>Building / Structure (₹)</label><input type="number" id="fBuilding" placeholder="0"></div>
+              <div class="field"><label>Contents / Machinery (₹)</label><input type="number" id="fContents" placeholder="0"></div>
+              <div class="field"><label>Stock (₹)</label><input type="number" id="fStock" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Risk Details</div>
+            <div class="section-grid">
+              <div class="field"><label>Occupancy</label>
+                <select id="fOccupancy">
+                  <option value="dwelling">Dwelling / Residential</option>
+                  <option value="office">Office / Shop (non-hazardous)</option>
+                  <option value="godown">Godown / Warehouse</option>
+                  <option value="industrial">Industrial — Non-hazardous</option>
+                  <option value="hazardous">Industrial — Hazardous</option>
+                </select></div>
+              <div class="field"><label>Construction</label>
+                <select id="fConstruction">
+                  <option value="pucca">Pucca (RCC) — no loading</option>
+                  <option value="semi">Semi-pucca — +0.15‰</option>
+                  <option value="kutcha">Kutcha — +0.40‰</option>
+                </select></div>
+              <div class="field"><label>Rate (per mille ‰) <span class="op-hint">editable</span></label><input type="number" step="0.01" id="fRate" value="0.25"></div>
+              <div class="field"><label>Policy Term</label>
+                <select id="fTerm"><option value="1">1 Year</option><option value="2">2 Years</option><option value="3">3 Years</option></select></div>
+              <div class="field"><label>Special Discount (%)</label><input type="number" id="fDiscount" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Add-on Perils</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="fSTFI" checked> <span>STFI — Storm, Flood (0.10‰)</span></label>
+              <label class="cb-row"><input type="checkbox" id="fRSMD" checked> <span>RSMD — Riot, Strike (0.05‰)</span></label>
+              <label class="cb-row"><input type="checkbox" id="fEQ"> <span>Earthquake (0.05‰)</span></label>
+              <label class="cb-row"><input type="checkbox" id="fTerror"> <span>Terrorism (0.12‰)</span></label>
+              <label class="cb-row"><input type="checkbox" id="fEscalation"> <span>Escalation Clause (5%)</span></label>
+              <label class="cb-row"><input type="checkbox" id="fTheftAdd"> <span><strong>🔐 Theft / Burglary Cover</strong></span></label>
+            </div>
+            <div class="field" id="fTheftRateWrap" style="display:none; margin-top:10px; padding:10px 12px; border-left:3px solid #f59e0b; background:rgba(245,158,11,.08); border-radius:8px;">
+              <label style="font-size:10px;font-weight:700;color:#92400e;">Theft / Burglary Rate (per mille ‰)</label>
+              <input type="number" step="0.01" id="fTheftRate" value="0.60" placeholder="0.60">
+              <span style="font-size:10px;color:var(--text-3);display:block;margin-top:3px;">Fire ke Total Sum Insured par lagega. Poora detailed theft calculator "🔐 Theft / Burglary" sub-tab me hai.</span>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="fireCalcBtn">⚡ Calculate Fire Premium</button></div>
+          <div class="op-result" id="fireResult" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div class="op-pane" id="op-theft">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">🔐</div> Theft / Burglary Insurance</div></div>
+
+          <div class="form-section">
+            <div class="section-grid">
+              <div class="field"><label>Sum Insured (₹)</label><input type="number" id="tSI" placeholder="0"></div>
+              <div class="field"><label>Property Type</label>
+                <select id="tType">
+                  <option value="residence">Residence / Household</option>
+                  <option value="shop">Shop / Showroom</option>
+                  <option value="office">Office / Establishment</option>
+                  <option value="godown">Godown / Warehouse</option>
+                  <option value="jewellery">Jewellery / High value</option>
+                </select></div>
+              <div class="field"><label>Rate (per mille ‰) <span class="op-hint">editable</span></label><input type="number" step="0.01" id="tRate" value="0.60"></div>
+              <div class="field"><label>Money SI — safe/transit (₹)</label><input type="number" id="tMoneySI" placeholder="0"></div>
+              <div class="field"><label>Special Discount (%)</label><input type="number" id="tDiscount" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Options</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="tFirstLoss"> <span>First Loss basis (−25%)</span></label>
+              <label class="cb-row"><input type="checkbox" id="tRiot"> <span>Riot &amp; Strike extension (0.05‰)</span></label>
+              <label class="cb-row"><input type="checkbox" id="tMoney"> <span>Money insurance (2.00‰)</span></label>
+              <label class="cb-row"><input type="checkbox" id="tSafe"> <span>Burglar alarm / strong-room (−10%)</span></label>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="theftCalcBtn">⚡ Calculate Theft Premium</button></div>
+          <div class="op-result" id="theftResult" style="display:none;"></div>
+        </div>
+      </div>
+
+      <p class="op-note">⚠️ Ye rates <strong>indicative / guideline</strong> hain (de-tariffed market). Har rate field editable hai — apni company ka exact rate daal kar calculate karein.</p>
+    </section>
+
+    <!-- ============== TAB · PERSONAL ACCIDENT ============== -->
+    <section class="tab-content" id="tab-pa">
+      <div class="op-pane active" id="op-pa">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">🧍</div> Personal Accident (PA)</div></div>
+
+          <div class="form-section">
+            <div class="section-grid">
+              <div class="field"><label>Capital Sum Insured / person (₹)</label><input type="number" id="pCSI" placeholder="0"></div>
+              <div class="field"><label>Plan</label>
+                <select id="pPlan">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="i">Table I — Death only (0.45‰)</option>
+                  <option value="ii">Table II — Death + PTD + PPD (1.00‰)</option>
+                  <option value="iii">Table III — Death + PTD + PPD + TTD (1.50‰)</option>
+                </select></div>
+              <div class="field"><label>Risk Group</label>
+                <select id="pRisk">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">Risk I — Admin / Clerical (no loading)</option>
+                  <option value="2">Risk II — Manual, non-hazardous (+25%)</option>
+                  <option value="3">Risk III — Hazardous work (+50%)</option>
+                </select></div>
+              <div class="field"><label>Rate (per mille ‰) <span class="op-hint">editable</span></label><input type="number" step="0.01" id="pRate" placeholder="Plan chunne par auto"></div>
+              <div class="field"><label>No. of Persons</label><input type="number" id="pMembers" value="1"></div>
+              <div class="field"><label>Age (yrs)</label><input type="number" id="pAge" placeholder="0"></div>
+              <div class="field"><label>Claim-free Years (for CB)</label><input type="number" id="pCbYears" value="0" min="0" max="10" placeholder="0"></div>
+              <div class="field"><label>Policy Term</label>
+                <select id="pTerm">
+                  <option value="" selected disabled>-- Select --</option><option value="1">1 Year</option><option value="2">2 Years</option><option value="3">3 Years</option></select></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Riders</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="pMedExt"> <span>Medical Expenses Extension</span></label>
+            </div>
+            <div class="field" id="pMedExtWrap" style="display:none; margin-top:10px; padding:10px 12px; border-left:3px solid #f59e0b; background:rgba(245,158,11,.08); border-radius:8px;">
+              <label style="font-size:10px;font-weight:700;color:#92400e;">Medical Extension %</label>
+              <select id="pMedExtPct">
+                <option value="10" selected>+10% premium → covers 25% of claim</option>
+                <option value="25">+25% premium → covers 50% of claim</option>
+              </select>
+              <span style="font-size:10px;color:var(--text-3);display:block;margin-top:3px;">Clause (j) — loading on basic accident premium.</span>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="paCalcBtn">⚡ Calculate PA Premium</button></div>
+          <div class="op-result" id="paResult" style="display:none;"></div>
+          <div class="op-result" id="paBenefits" style="display:none;margin-top:14px;"></div>
+          <div class="btn-row no-print hq-gen" id="paGenRow" style="display:none">
+            <button class="btn-secondary" id="paShare">📤 Share</button>
+            <button class="btn-primary" id="paGen">📄 Generate Quotation</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="op-note">⚠️ Ye rates <strong>indicative / guideline</strong> hain (de-tariffed market). Har rate field editable hai — apni company ka exact rate daal kar calculate karein.</p>
+    </section>
+
+    <!-- ============== TAB · MEDICLAIM ============== -->
+    <section class="tab-content" id="tab-med">
+
+      <div class="op-tabs" id="medOpTabs" style="display:none;">
+        <button class="op-tab active" data-op="yec">🌱 Youth Eco Care</button>
+        <button class="op-tab" data-op="ossp">🛡️ Sampoorna Swasthya Suraksha</button>
+        <button class="op-tab" data-op="hff">👨‍👩‍👧 Happy Family Floater</button>
+        <button class="op-tab" data-op="stu">⬆️ Super Health Top-Up</button>
+      </div>
+
+
+
+      <!-- ---------- ORIENTAL YOUTH ECO CARE ---------- -->
+      <div class="op-pane active" id="op-yec">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">🌱</div> Oriental Youth Eco Care Policy</div></div>
+
+          <p class="op-note" style="margin:0 0 14px;">
+            UIN: <strong>OICHLIP24034V012324</strong> · Entry age <strong>18–45 yrs</strong> ·
+            SI <strong>₹3 lakh – ₹1 crore</strong> · 1-year term, lifelong renewable ·
+            Rates official chart se · <strong>GST exempt — koi tax add nahi hota.</strong>
+          </p>
+
+          <div class="form-section">
+            <div class="form-section-title">Plan &amp; Sum Insured</div>
+            <div class="section-grid">
+              <div class="field"><label>Plan</label>
+                <select id="yecPlan">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="basic">Basic Plan</option>
+                  <option value="premium">Premium Plan (+ Maternity, ART, Daily Cash, 2nd Opinion)</option>
+                </select></div>
+              <div class="field"><label>Sum Insured</label><select id="yecSI"></select></div>
+              <div class="field"><label>Cover Basis</label>
+                <select id="yecMode">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="individual">Individual</option>
+                  <option value="floater">Family Floater</option>
+                  <option value="ff">Floater with Floater</option>
+                </select></div>
+              <div class="field"><label>No. of Members</label>
+                <select id="yecMembers">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">1</option><option value="2">2</option>
+                  <option value="3">3</option><option value="4">4</option>
+                  <option value="5">5</option><option value="6">6</option>
+                </select></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Member Ages </div>
+            <div class="section-grid">
+              <div class="field" id="yecMemWrap1"><label>Member 1 age</label><input type="number" id="yecAge1" placeholder="30"></div>
+              <div class="field" id="yecMemWrap2"><label>Member 2 age</label><input type="number" id="yecAge2" placeholder="28"></div>
+              <div class="field" id="yecMemWrap3" style="display:none;"><label>Member 3 age</label><input type="number" id="yecAge3"></div>
+              <div class="field" id="yecMemWrap4" style="display:none;"><label>Member 4 age</label><input type="number" id="yecAge4"></div>
+              <div class="field" id="yecMemWrap5" style="display:none;"><label>Member 5 age</label><input type="number" id="yecAge5"></div>
+              <div class="field" id="yecMemWrap6" style="display:none;"><label>Member 6 age</label><input type="number" id="yecAge6"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Discounts</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="yecOnline"> <span>Online discount — 10% (max ₹2,000)</span></label>
+              <label class="cb-row"><input type="checkbox" id="yecNoTPA"> <span>TPA services NOT opted — 5.5%</span></label>
+              <label class="cb-row"><input type="checkbox" id="yecFamily"> <span>Family discount — 10% (2+ members)</span></label>
+              <label class="cb-row"><input type="checkbox" id="yecCBLieu"> <span>In lieu of Cumulative Bonus — 2%</span></label>
+            </div>
+            <div class="section-grid" style="margin-top:10px;">
+              <div class="field"><label>Manual adjustment (%) <span class="op-hint">+ loading / − discount</span></label>
+                <input type="number" id="yecAdj" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="yecCalcBtn">⚡ Calculate Youth Eco Care Premium</button></div>
+          <div class="op-result" id="yecResult" style="display:none;"></div>
+          <div class="op-result" id="yecBenefits" style="display:none;margin-top:14px;"></div>
+                    <div class="btn-row no-print hq-gen" id="yecGenRow" style="display:none;margin-top:14px;">
+            <button class="btn-secondary" id="yecShare">📤 Share</button>
+            <button class="btn-primary" id="yecGen">📄 Generate Quotation →</button>
+          </div>
+          <div class="op-tax" id="yecTaxTip" style="display:none;"></div>
+        </div>
+      </div>
+
+
+      <!-- ---------- ORIENTAL SAMPOORNA SWASTHYA SURAKSHA ---------- -->
+      <div class="op-pane" id="op-ossp">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">🛡️</div> Oriental Sampoorna Swasthya Suraksha</div></div>
+
+          <p class="op-note" style="margin:0 0 14px;">
+            UIN: <strong>OICHLIP26035V012526</strong> · Entry age <strong>18+ (no max)</strong> ·
+            SI <strong>₹1 lakh – ₹500 lakh</strong> · 3 plans × 2 zones × 6 payment options ·
+            lifelong renewable · <strong>GST exempt.</strong>
+          </p>
+
+          <div class="form-section">
+            <div class="form-section-title">Plan · Zone · Payment</div>
+            <div class="section-grid">
+              <div class="field"><label>Plan</label>
+                <select id="osPlan">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="premium">PREMIUM Plan</option>
+                  <option value="elite">ELITE Plan (+ Maternity, Health check-up)</option>
+                  <option value="royal">ROYAL Plan (+ Oncology abroad, actual room)</option>
+                </select></div>
+              <div class="field"><label>Zone</label>
+                <select id="osZone">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">Zone I — Guj, Mumbai, Chennai, Blr, Pune, Delhi NCR</option>
+                  <option value="2">Zone II — Rest of India</option>
+                </select></div>
+              <div class="field"><label>Payment Option</label>
+                <select id="osMode">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="annual">Annual (1 year)</option>
+                  <option value="2yr">2-Year term (biennial)</option>
+                  <option value="3yr">3-Year term (triennial)</option>
+                  <option value="half">Half-Yearly instalment</option>
+                  <option value="quarterly">Quarterly instalment</option>
+                  <option value="monthly">Monthly instalment</option>
+                </select></div>
+              <div class="field"><label>Sum Insured</label><select id="osSI"></select></div>
+              <div class="field"><label>Cover Basis</label>
+                <select id="osBasis">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="individual">Individual</option>
+                  <option value="floater">Floater</option>
+                  <option value="ff">Floater within Floater</option>
+                </select></div>
+              <div class="field"><label>No. of Members</label>
+                <select id="osMembers">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">1</option><option value="2">2</option>
+                  <option value="3">3</option><option value="4">4</option>
+                  <option value="5">5</option><option value="6">6</option>
+                </select></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Member Ages </div>
+            <div class="section-grid">
+              <div class="field" id="osMemWrap1"><label>Member 1 age</label><input type="number" id="osAge1" placeholder="35"></div>
+              <div class="field" id="osMemWrap2"><label>Member 2 age</label><input type="number" id="osAge2" placeholder="32"></div>
+              <div class="field" id="osMemWrap3" style="display:none;"><label>Member 3 age</label><input type="number" id="osAge3"></div>
+              <div class="field" id="osMemWrap4" style="display:none;"><label>Member 4 age</label><input type="number" id="osAge4"></div>
+              <div class="field" id="osMemWrap5" style="display:none;"><label>Member 5 age</label><input type="number" id="osAge5"></div>
+              <div class="field" id="osMemWrap6" style="display:none;"><label>Member 6 age</label><input type="number" id="osAge6"></div>
+            </div>
+            <div class="checkbox-grid" style="margin-top:10px;">
+              <label class="cb-row" id="osAgeLoadRow"><input type="checkbox" id="osAgeLoad" disabled>
+                <span>Age loading — <strong id="osAgeLoadTxt">koi member 66+ nahi</strong></span></label>
+            </div>
+            <div class="op-hint" id="osAgeLoadDetail" style="display:none;margin-top:8px;"></div>
+            
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Discounts &amp; Optional Covers</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="osOnline"> <span>Online discount — 10% (max ₹5,000)</span></label>
+              <label class="cb-row"><input type="checkbox" id="osNoTPA"> <span>TPA services NOT opted — 5.5%</span></label>
+              <label class="cb-row"><input type="checkbox" id="osFamily"> <span>Family discount — 5% (2+ members)</span></label>
+              <label class="cb-row"><input type="checkbox" id="osLongTerm"> <span>Long-term policy discount — 5%</span></label>
+              <label class="cb-row"><input type="checkbox" id="osClaimFree"> <span>3 years claim-free (reduced age loading)</span></label>
+              <label class="cb-row"><input type="checkbox" id="osPA"> <span>Personal Accident cover (₹50 / lakh / person)</span></label>
+            </div>
+
+            <div class="section-grid" style="margin-top:12px;">
+              <div class="field"><label>Migration Discount</label>
+                <select id="osMigration">
+                  <option value="none" selected>Not a migration case</option>
+                  <option value="same">Same Sum Insured — 5%</option>
+                  <option value="higher">Higher Sum Insured — 10%</option>
+                </select></div>
+
+              <div class="field"><label>Room Rent Upgradation</label>
+                <select id="osRoomUp">
+                  <option value="none">Not opted</option>
+                  <option value="50">Option 1 — 50% enhancement</option>
+                  <option value="100">Option 2 — 100% enhancement</option>
+                </select>
+                <div class="op-hint" id="osRoomUpNote" style="display:none;margin-top:5px;"></div></div>
+
+              <div class="field"><label>PED Waiting Period Buyback</label>
+                <select id="osPedBuy">
+                  <option value="none">Not opted</option>
+                </select>
+                <div class="op-hint" id="osPedNote" style="display:none;margin-top:5px;"></div></div>
+            </div>
+            <div class="section-grid" id="osPAWrap" style="display:none;margin-top:10px;">
+              <div class="field"><label>PA Sum Insured (₹) <span class="op-hint">blank = same as health SI</span></label>
+                <input type="number" id="osPASI" placeholder="auto"></div>
+              <div class="field"><label>PA rate per lakh (₹) <span class="op-hint">editable</span></label>
+                <input type="number" id="osPARate" placeholder="50"></div>
+            </div>
+            <div class="section-grid" style="margin-top:10px;">
+              <div class="field"><label>Manual adjustment (%) <span class="op-hint">+ loading / − discount</span></label>
+                <input type="number" id="osAdj" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="osCalcBtn">⚡ Calculate OSSP Premium</button></div>
+          <div class="op-result" id="osResult" style="display:none;"></div>
+          <div class="op-result" id="osBenefits" style="display:none;margin-top:14px;"></div>
+                    <div class="btn-row no-print hq-gen" id="osGenRow" style="display:none;margin-top:14px;">
+            <button class="btn-secondary" id="osShare">📤 Share</button>
+            <button class="btn-primary" id="osGen">📄 Generate Quotation →</button>
+          </div>
+          <div class="op-tax" id="osTaxTip" style="display:none;"></div>
+        </div>
+      </div>
+
+
+      <!-- ---------- OICL HAPPY FAMILY FLOATER 2024 ---------- -->
+      <div class="op-pane" id="op-hff">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">👨‍👩‍👧</div> OICL Happy Family Floater Policy 2024</div></div>
+
+          <p class="op-note" style="margin:0 0 14px;">
+            UIN: <strong>OICHLIP25046V062425</strong> · Floater SI <strong>₹1 – 50 lakh</strong> ·
+            4 plans · <strong>minimum 2 persons</strong> · max entry age 65 (70 conditional) ·
+            1-year term, renewable lifelong · <strong>GST exempt.</strong>
+          </p>
+
+          <div class="form-section">
+            <div class="form-section-title">Plan &amp; Sum Insured</div>
+            <div class="section-grid">
+              <div class="field"><label>Plan</label>
+                <select id="hfPlan">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="silver">SILVER — ₹1 to 5 lakh (zone-rated)</option>
+                  <option value="gold">GOLD — ₹6 to 10 lakh</option>
+                  <option value="diamond">DIAMOND — ₹12 to 20 lakh (+ Maternity)</option>
+                  <option value="platinum">PLATINUM — ₹25 to 50 lakh (+ Maternity)</option>
+                </select></div>
+              <div class="field" id="hfZoneWrap"><label>Zone <span class="op-hint">Silver plan only</span></label>
+                <select id="hfZone">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">Zone I</option>
+                  <option value="2">Zone II</option>
+                </select></div>
+              <div class="field"><label>Sum Insured (floater)</label><select id="hfSI"></select></div>
+              <div class="field"><label>No. of Members</label>
+                <select id="hfMembers">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="2">2</option><option value="3">3</option>
+                  <option value="4">4</option><option value="5">5</option>
+                  <option value="6">6</option>
+                </select></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Member Ages </div>
+            <div class="section-grid">
+              <div class="field" id="hfMemWrap1"><label>Member 1 age</label><input type="number" id="hfAge1" placeholder="38"></div>
+              <div class="field" id="hfMemWrap2"><label>Member 2 age</label><input type="number" id="hfAge2" placeholder="35"></div>
+              <div class="field" id="hfMemWrap3" style="display:none;"><label>Member 3 age</label><input type="number" id="hfAge3"></div>
+              <div class="field" id="hfMemWrap4" style="display:none;"><label>Member 4 age</label><input type="number" id="hfAge4"></div>
+              <div class="field" id="hfMemWrap5" style="display:none;"><label>Member 5 age</label><input type="number" id="hfAge5"></div>
+              <div class="field" id="hfMemWrap6" style="display:none;"><label>Member 6 age</label><input type="number" id="hfAge6"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Add-on Covers </div>
+            <div class="section-grid">
+              <div class="field"><label>Restoration of Sum Insured</label>
+                <select id="hfRestore">
+                  <option value="none">Not opted</option>
+                  <option value="50">Option 1 — 50% restoration</option>
+                  <option value="100">Option 2 — 100% restoration</option>
+                </select></div>
+              <div class="field"><label>Waiver of Proportionate Clause</label>
+                <select id="hfWaiver">
+                  <option value="none">Not opted</option>
+                  <option value="50">Option 1 — 50%</option>
+                  <option value="100">Option 2 — 100%</option>
+                </select></div>
+              <div class="field"><label>Life Hardship Survival Benefit</label>
+                <select id="hfLHSB">
+                  <option value="none">Not opted</option>
+                  <option value="a">Plan A — 3% of basic premium</option>
+                  <option value="b">Plan B — 5% of basic premium</option>
+                </select></div>
+            </div>
+            <div class="checkbox-grid" style="margin-top:10px;">
+              <label class="cb-row" id="hfCopayWrap"><input type="checkbox" id="hfCopayRem"> <span>Removal of Co-Pay — +17% (Silver only)</span></label>
+              <label class="cb-row"><input type="checkbox" id="hfPA"> <span>Personal Accident cover (₹60 / lakh / person)</span></label>
+            </div>
+            <div class="section-grid" id="hfPAWrap" style="display:none;margin-top:10px;">
+              <div class="field"><label>PA Sum Insured (₹) <span class="op-hint">blank = same as health SI</span></label>
+                <input type="number" id="hfPASI" placeholder="auto"></div>
+              <div class="field"><label>PA rate per lakh (₹) <span class="op-hint">editable</span></label>
+                <input type="number" id="hfPARate" placeholder="60"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Discounts</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="hfOnline"> <span>Online discount — 10% (max ₹2,000)</span></label>
+              <label class="cb-row"><input type="checkbox" id="hfNoTPA"> <span>TPA services NOT opted — 5.5%</span></label>
+            </div>
+            <div class="section-grid" style="margin-top:10px;">
+              <div class="field"><label>Manual adjustment (%) <span class="op-hint">+ loading / − discount</span></label>
+                <input type="number" id="hfAdj" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="hfCalcBtn">⚡ Calculate Happy Family Floater Premium</button></div>
+          <div class="op-result" id="hfResult" style="display:none;"></div>
+          <div class="op-result" id="hfBenefits" style="display:none;margin-top:14px;"></div>
+                    <div class="btn-row no-print hq-gen" id="hfGenRow" style="display:none;margin-top:14px;">
+            <button class="btn-secondary" id="hfShare">📤 Share</button>
+            <button class="btn-primary" id="hfGen">📄 Generate Quotation →</button>
+          </div>
+          <div class="op-tax" id="hfTaxTip" style="display:none;"></div>
+        </div>
+      </div>
+
+
+      <!-- ---------- ORIENTAL SUPER HEALTH TOP-UP ---------- -->
+      <div class="op-pane" id="op-stu">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">⬆️</div> Oriental Super Health Top-Up 2024</div></div>
+
+          <p class="op-note" style="margin:0 0 14px;">
+            UIN: <strong>OICHLIP25042V042425</strong> · High-deductible top-up ·
+            17 official Deductible/SI combinations · max entry age 65 (66–70 with 10% loading) ·
+            <strong>GST exempt.</strong><br>
+            ⚠️ Claim tabhi trigger hota hai jab policy period ka <strong>aggregate claim deductible se upar</strong> chala jaaye.
+          </p>
+
+          <div class="form-section">
+            <div class="form-section-title">Plan &amp; Deductible / Sum Insured</div>
+            <div class="section-grid">
+              <div class="field"><label>Plan</label>
+                <select id="stPlan">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="individual">Individual (each member own SI)</option>
+                  <option value="floater">Family Floater (min 2 persons)</option>
+                </select></div>
+              <div class="field" style="grid-column:span 2;"><label>Deductible → Sum Insured</label>
+                <select id="stCombo"></select></div>
+              <div class="field"><label>No. of Members</label>
+                <select id="stMembers">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">1</option><option value="2">2</option>
+                  <option value="3">3</option><option value="4">4</option>
+                  <option value="5">5</option><option value="6">6</option>
+                </select></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Member Ages
+              </div>
+            <div class="section-grid">
+              <div class="field" id="stMemWrap1"><label>Member 1 age</label><input type="number" id="stAge1" placeholder="40"></div>
+              <div class="field" id="stMemWrap2"><label>Member 2 age</label><input type="number" id="stAge2" placeholder="37"></div>
+              <div class="field" id="stMemWrap3" style="display:none;"><label>Member 3 age</label><input type="number" id="stAge3"></div>
+              <div class="field" id="stMemWrap4" style="display:none;"><label>Member 4 age</label><input type="number" id="stAge4"></div>
+              <div class="field" id="stMemWrap5" style="display:none;"><label>Member 5 age</label><input type="number" id="stAge5"></div>
+              <div class="field" id="stMemWrap6" style="display:none;"><label>Member 6 age</label><input type="number" id="stAge6"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Step 1 — Loadings </div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="stEntryLoad"> <span>Entry-age loading +10% (members aged 66–70)</span></label>
+              <label class="cb-row"><input type="checkbox" id="stRoomRemove"> <span>Remove room-rent limit (+20% / +10% / +5% by deductible)</span></label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Step 2 — Discounts </div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="stFamily"> <span>Family discount 10% (Individual plan, 2+ members)</span></label>
+              <label class="cb-row"><input type="checkbox" id="stLoyalty"> <span>Loyalty discount 10% (existing OICL base health policy)</span></label>
+              <label class="cb-row"><input type="checkbox" id="stStaff"> <span>Staff discount 33% (serving / retired — family &amp; loyalty block ho jaate hain)</span></label>
+              <label class="cb-row"><input type="checkbox" id="stPortal"> <span>Portal discount 10% (max ₹2,000 — fresh policy only)</span></label>
+            </div>
+            <div class="section-grid" style="margin-top:10px;">
+              <div class="field"><label>Manual adjustment (%) <span class="op-hint">+ loading / − discount</span></label>
+                <input type="number" id="stAdj" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="stCalcBtn">⚡ Calculate Super Top-Up Premium</button></div>
+          <div class="op-result" id="stResult" style="display:none;"></div>
+          <div class="op-result" id="stBenefits" style="display:none;margin-top:14px;"></div>
+                    <div class="btn-row no-print hq-gen" id="stGenRow" style="display:none;margin-top:14px;">
+            <button class="btn-secondary" id="stShare">📤 Share</button>
+            <button class="btn-primary" id="stGen">📄 Generate Quotation →</button>
+          </div>
+          <div class="op-tax" id="stTaxTip" style="display:none;"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============== TAB · HEALTH QUOTATION ============== -->
+    <section class="tab-content" id="tab-hquote">
+      <div class="quote-toolbar no-print">
+        <button class="btn-secondary" id="hqBack">← Back to Calculator</button>
+        <button class="btn-secondary" id="hqShare">📤 Share</button>
+        <button class="btn-primary" id="hqPrint">⬇️ Download PDF (1-Page)</button>
+      </div>
+
+      <div id="hqDoc" class="quote-doc">
+        <div class="doc-watermark" aria-hidden="true"></div>
+
+        <div class="quote-head">
+          <div>
+            <div class="logo-circle">OIC</div>
+            <div class="brand-title">ORIENTAL INSURANCE COMPANY LTD</div>
+          </div>
+          <div class="quote-no">
+            <div class="quote-no-label" id="hqKindLabel">Health Quotation</div>
+            <div id="hqNumber" class="quote-num">0000</div>
+            <div style="font-size:10px;color:#64748b;margin-top:4px;">Date: <b id="hqDateTop" style="color:#0a2540;">—</b></div>
+          </div>
+        </div>
+
+        <div style="background:#0a2540;color:#fff;padding:10px 16px;border-radius:10px;margin-bottom:14px;">
+          <span id="hqProduct" style="font-size:14px;font-weight:700;">—</span>
+          <span style="float:right;font-size:10px;opacity:.85;">UIN: <span id="hqUin">—</span></span>
+        </div>
+
+        <div class="quote-summary">
+          <div class="qs-title">Premium Summary</div>
+          <div class="qs-grid">
+            <div class="qs-item"><span>Base Premium</span><b id="hqBaseTop">₹ 0</b></div>
+            <div class="qs-item"><span>Net Premium</span><b id="hqNetTop">₹ 0</b></div>
+            <div class="qs-item"><span>GST</span><b id="hqGstTop">NIL — Exempt</b></div>
+            <div class="qs-item qs-grand"><span>Net Premium Payable</span><b id="hqPayableTop">₹ 0</b></div>
+          </div>
+        </div>
+
+        <div class="quote-meta" id="hqMeta"></div>
+
+        <h3 class="card-title" style="font-size:14px;margin:18px 0 8px;">Premium Breakdown</h3>
+        <table class="breakdown-table" id="hqTable">
+          <thead><tr><th>Particulars</th><th class="right">Amount</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <div id="hqCoversWrap" style="display:none;">
+          <h3 class="card-title" style="font-size:14px;margin:18px 0 8px;">Key Covers &amp; Sub-limits</h3>
+          <table class="breakdown-table" id="hqCovers"><tbody></tbody></table>
+        </div>
+
+        <table class="final-table">
+          <tbody>
+            <tr class="bold"><td>Total Premium</td><td class="right num" id="hqTotal">₹ 0</td></tr>
+            <tr><td>GST (Health insurance)</td><td class="right num">NIL — Exempt</td></tr>
+            <tr class="grand"><td>Net Premium Payable</td><td class="right num" id="hqNet">₹ 0</td></tr>
+          </tbody>
+        </table>
+
+        <div id="hqNote" style="font-size:11px;color:#475569;margin-top:12px;"></div>
+
+        <div class="quote-foot">
+          <div class="sig-block"><div>Signature</div><div class="sig-line"></div></div>
+          <div class="sig-block"><div>Name of Agent / Agency Code</div><div class="sig-line"></div></div>
+          <div class="sig-block"><div>Branch / Divisional Manager</div><div class="sig-line"></div></div>
+        </div>
+
+        <div class="disclaimer">
+          Disclaimer: Premium computed as per official OICL premium chart. Final premium is subject to
+          underwriting, medical examination (if applicable) &amp; terms in force on the date of policy
+          issuance. <strong>Health insurance premium is exempt from GST.</strong><br>
+          <strong>Generated: <span id="hqGeneratedAt">—</span> · Customized by Mohit Sharma</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== TAB · ABOUT ============== -->
+    <section class="tab-content" id="tab-about">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon">ℹ️</div>
+            OICL Premium Calculator V30.0
+          </div>
+        </div>
+
+        <p style="font-size:14px;color:var(--text-2);margin-bottom:16px;line-height:1.6;">
+          <strong>Oriental Insurance Company Ltd.</strong><br>
+          Premium Calculator · Motor · Fire &amp; Theft · PA · Mediclaim<br>
+          All India Notified IRDAI Rates Apply.
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;">📋 Motor — Policy Types</h3>
+        <ul class="bullet">
+          <li><strong>Package Policy</strong> — OD + TP (1 Year)</li>
+          <li><strong>Bundle Policy</strong> — OD + TP (3 Years for Car / 5 Years for 2W)</li>
+          <li><strong>Standard OD (SAOD)</strong> — Standalone Own Damage only</li>
+          <li><strong>Liability Only</strong> — Third Party cover only</li>
+        </ul>
+        <p style="font-size:12px;color:var(--text-3);margin:-4px 0 0;">
+          Private Car &amp; Two Wheeler me chaaron available hain. Commercial vehicles
+          (Taxi, Bus / PCCV, Goods Vehicle, Class D) me sirf <strong>Package</strong> aur
+          <strong>Liability Only</strong> hote hain.
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;margin-top:20px;">🚗 Vehicle Classes</h3>
+        <ul class="bullet">
+          <li><strong>Private Car</strong> — Petrol / Diesel / CNG &amp; Electric</li>
+          <li><strong>Two Wheeler</strong> — Petrol &amp; Electric</li>
+          <li><strong>Taxi / PCCV</strong> — upto 6 seats</li>
+          <li><strong>Bus / PCCV</strong> — School Bus, Staff Bus, 6–17 / 17–36 / above 36 seats</li>
+          <li><strong>Class D</strong> — Ambulance, Misc – Domestic (MISC D)</li>
+          <li><strong>Goods Vehicle</strong> — GCCV (GVW-wise) &amp; 3-Wheeler</li>
+        </ul>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;margin-top:20px;">🏥 Health &amp; Other Products</h3>
+        <ul class="bullet">
+          <li><strong>Youth Eco Care</strong> — UIN OICHLIP24034V012324</li>
+          <li><strong>Sampoorna Swasthya</strong> — UIN OICHLIP26035V012526 (Premium / Elite / Royal)</li>
+          <li><strong>Happy Family Floater 2024</strong> — UIN OICHLIP25046V062425 (Silver / Gold / Diamond / Platinum)</li>
+          <li><strong>Super Health Top-Up 2024</strong> — UIN OICHLIP25042V042425</li>
+          <li><strong>Personal Accident</strong> — Table I / II / III, Risk Group I–III</li>
+          <li><strong>Fire &amp; Allied Perils</strong> · <strong>Theft / Burglary</strong></li>
+        </ul>
+        <p style="font-size:12px;color:var(--text-3);margin:-4px 0 0;">
+          Health aur Personal Accident premium par <strong>GST applicable nahi</strong> hai.
+          Motor, Fire aur Theft par 18% GST lagta hai.
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;margin-top:20px;">📧 Contact</h3>
+        <p style="font-size:13px;color:var(--text-2);">
+          For any query, drop a mail:<br>
+          <strong style="color:var(--primary);">kingsharma7400@gmail.com</strong>
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;margin-top:20px;">👤 Customized By</h3>
+        <p style="font-size:13px;color:var(--text-2);">
+          This calculator was built &amp; customized by <strong style="color:var(--primary);">Mohit sharma</strong>.
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;margin-top:20px;">✨ What's new</h3>
+        <div class="pro-feature-grid">
+          <div class="pro-feature"><b>🏥 Health Products</b><span>Youth Eco Care, Sampoorna Swasthya, Happy Family Floater &amp; Super Top-Up.</span></div>
+          <div class="pro-feature"><b>📄 Health Quotation</b><span>Motor jaisa 1-page A4 quotation, PDF download &amp; share.</span></div>
+          <div class="pro-feature"><b>🧍 PA Quotation</b><span>Personal Accident ka bhi apna quotation &amp; share button.</span></div>
+          <div class="pro-feature"><b>🕘 Quote History</b><span>Every calculation auto-saves with search, filters &amp; stats.</span></div>
+          <div class="pro-feature"><b>⬇️ CSV Export</b><span>One-click backup of all quotes for Excel / records.</span></div>
+          <div class="pro-feature"><b>🌙 Dark Mode</b><span>Eye-friendly theme toggle in the top bar.</span></div>
+        </div>
+
+        <div class="note">
+          <strong>OICL Premium Calculator</strong><br>
+          All rates as per IRDAI guidelines.
+          Health premium official OICL charts se.
+        </div>
+      </div>
+    </section>
+
+  <footer class="footer">
+    © 2026 · OICL Premium Calculator V30.0 · Customized by Mohit sharma · 2026 Edition.
+  </footer>
+
+  </main>
+
+</div>
+
+
+  <!-- PRO: toasts -->
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+  <!-- ============== SHARE MODAL ============== -->
+  <div id="shareModal" class="modal-overlay" style="display:none;">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Share Quotation">
+      <h3 class="modal-title">📤 Share Quotation</h3>
+      <p class="modal-sub">Choose how you want to share this quotation:</p>
+      <div class="share-options">
+        <button id="sharePdfFile" class="btn-share btn-whatsapp" type="button">
+          <span class="share-ico">📤</span> Share as PDF (1-Page A4)
+        </button>
+        <button id="sharePdf" class="btn-share btn-pdf" type="button">
+          <span class="share-ico">⬇️</span> Download PDF (1-Page A4)
+        </button>
+      </div>
+      <button id="shareCancel" class="btn-secondary modal-cancel" type="button">Cancel</button>
+    </div>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="commission_rates.js"></script>
+<script src="rates.js"></script>
+<script src="app.js"></script>
+<script src="history.js"></script>
+<script src="pro.js"></script>
+  <script src="other.js"></script>
+  <script src="youth_eco_care.js"></script>
+  <script src="ossp_rates.js"></script>
+  <script src="ossp.js"></script>
+  <script src="hff_rates.js"></script>
+  <script src="hff.js"></script>
+  <script src="stu_rates.js"></script>
+  <script src="stu.js"></script>
+  <script src="med-nav.js"></script>
+  <script src="health-quote.js"></script>
+  <script src="excel-export.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,1261 @@
+/* =========================================================
+   OICL Premium Calculator V30.0 · Modern UI Layer
+   Loaded AFTER styles.css — enhances without breaking.
+   Includes: polish, dark mode, history, toasts, steps.
+   ========================================================= */
+
+/* ---------- brand tokens ---------- */
+:root {
+  --oic-navy: #0b1f4b;
+  --oic-orange: #f97316;
+  --oic-orange-soft: #fff7ed;
+  --pro-radius: 14px;
+  --pro-ring: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  --pro-transition: all 0.18s ease;
+}
+
+/* ---------- base polish ---------- */
+html { scroll-behavior: smooth; }
+body { text-rendering: optimizeLegibility; }
+::selection { background: rgba(79, 70, 229, 0.22); }
+
+/* nicer scrollbars */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: #a5b4fc; background-clip: content-box; }
+
+/* ---------- cards & inputs ---------- */
+.card {
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 24px -18px rgba(15, 23, 42, 0.25);
+  transition: var(--pro-transition);
+}
+.field input:not([type="checkbox"]):not([type="radio"]),
+.field select {
+  transition: var(--pro-transition);
+}
+.field input:not([type="checkbox"]):not([type="radio"]):focus,
+.field select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: var(--pro-ring);
+  outline: none;
+}
+.field label { letter-spacing: 0.1px; }
+
+/* section titles with accent bar */
+.form-section-title {
+  position: relative;
+  padding-left: 12px;
+}
+.form-section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--oic-orange), var(--primary));
+}
+
+/* checkbox rows: card-like hover */
+.cb-row {
+  transition: var(--pro-transition);
+  border-radius: 10px;
+  padding: 7px 10px !important;
+  border: 1px solid transparent;
+}
+.cb-row:hover { background: #f1f5ff; border-color: #e0e7ff; }
+.cb-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* ---------- buttons ---------- */
+/* Calculate button: original orange style from styles.css (no override — user request). */
+.btn-secondary { transition: var(--pro-transition); }
+.btn-secondary:hover { border-color: var(--primary-light); color: var(--primary); transform: translateY(-1px); }
+
+
+/* ---------- top bar actions ---------- */
+.top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pro-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: var(--pro-transition);
+  box-shadow: var(--shadow);
+}
+.pro-top-btn:hover { border-color: var(--primary-light); color: var(--primary); transform: translateY(-1px); }
+
+/* ---------- step progress ---------- */
+.stepper {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--pro-radius);
+  padding: 14px 18px 12px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.stepper-row { display: flex; align-items: center; gap: 6px; }
+.step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-3);
+  white-space: nowrap;
+  transition: var(--pro-transition);
+}
+.step-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  background: #f1f5f9;
+  color: var(--text-3);
+  border: 1px solid var(--border);
+  transition: var(--pro-transition);
+  flex-shrink: 0;
+}
+.step-sep { flex: 1; height: 2px; background: #f1f5f9; border-radius: 2px; min-width: 12px; }
+.step.current { color: var(--primary); }
+.step.current .step-dot {
+  background: linear-gradient(135deg, #4f46e5, #6d28d9);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 12px -4px rgba(79, 70, 229, 0.7);
+}
+.step.done { color: #047857; }
+.step.done .step-dot { background: #10b981; color: #fff; border-color: transparent; }
+.step.done .step-dot::before { content: "✓"; font-size: 13px; }
+.step.done .step-dot span, .step.current .step-dot span { display: none; }
+.step.done-all { color: #047857; }
+.step-bar { height: 4px; background: #f1f5f9; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+.step-bar-fill {
+  height: 100%;
+  width: 12%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--oic-orange), var(--primary));
+  transition: width 0.4s ease;
+}
+@media (max-width: 640px) {
+  .step span.step-label { display: none; }
+  .stepper-row { justify-content: space-between; }
+  .step-sep { min-width: 8px; }
+}
+
+/* ---------- hero animation ---------- */
+.premium-hero { position: relative; overflow: hidden; }
+.premium-hero::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  right: -20%;
+  width: 60%;
+  height: 220%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.14) 0%, transparent 65%);
+  pointer-events: none;
+}
+@keyframes heroPop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.012); }
+  100% { transform: scale(1); }
+}
+.hero-pop { animation: heroPop 0.5s ease; }
+.hero-amount { font-variant-numeric: tabular-nums; }
+
+/* ---------- result tables ---------- */
+.breakdown-table tbody tr { transition: background 0.15s ease; }
+.breakdown-table tbody tr:hover { background: #f8faff; }
+.breakdown-table thead th {
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  z-index: 1;
+}
+.final-table .grand td {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(245, 158, 11, 0.1)) !important;
+}
+
+/* ---------- sidebar badge ---------- */
+.nav-item { position: relative; }
+.nav-badge {
+  margin-left: auto;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px -4px rgba(249, 115, 22, 0.8);
+}
+
+/* =========================================================
+   HISTORY TAB
+   ========================================================= */
+.history-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.h-search {
+  flex: 1 1 240px;
+  position: relative;
+}
+.h-search input {
+  width: 100%;
+  padding: 11px 14px 11px 40px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-family: inherit;
+  transition: var(--pro-transition);
+  background: #fff;
+}
+.h-search input:focus { border-color: var(--primary); box-shadow: var(--pro-ring); outline: none; }
+.h-search::before {
+  content: "🔍";
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+}
+.h-filter {
+  padding: 11px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: inherit;
+  background: #fff;
+  color: var(--text);
+  cursor: pointer;
+  transition: var(--pro-transition);
+}
+.h-filter:focus { border-color: var(--primary); outline: none; }
+
+.h-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+@media (max-width: 700px) { .h-stats { grid-template-columns: repeat(2, 1fr); } }
+.h-stat {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--pro-radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.h-stat::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--h-accent, var(--primary));
+}
+.h-stat:nth-child(1) { --h-accent: #4f46e5; }
+.h-stat:nth-child(2) { --h-accent: #10b981; }
+.h-stat:nth-child(3) { --h-accent: #f59e0b; }
+.h-stat:nth-child(4) { --h-accent: #0ea5e9; }
+.h-stat-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-3); }
+.h-stat-value { font-family: "Plus Jakarta Sans", Inter, sans-serif; font-size: 22px; font-weight: 800; margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+.h-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 6px 2px 12px;
+}
+.h-result-count { font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+.h-bulk { display: flex; gap: 8px; flex-wrap: wrap; }
+.h-mini-btn {
+  padding: 7px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: var(--pro-transition);
+}
+.h-mini-btn:hover { border-color: var(--primary-light); color: var(--primary); }
+.h-mini-btn.danger:hover { border-color: #fca5a5; color: #dc2626; background: #fef2f2; }
+
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 14px;
+}
+.h-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--pro-radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  transition: var(--pro-transition);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.h-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: #c7d2fe; }
+.h-card-top { display: flex; align-items: center; justify-content: space-between; }
+.h-card-id { display: flex; align-items: center; gap: 8px; }
+.h-qno {
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--oic-navy);
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+}
+.h-time { font-size: 11px; color: var(--text-3); font-weight: 500; }
+.h-net {
+  font-family: "Plus Jakarta Sans", Inter, sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  font-variant-numeric: tabular-nums;
+}
+.h-title { font-size: 15px; font-weight: 800; letter-spacing: -0.01em; }
+.h-sub { font-size: 12px; color: var(--text-2); font-weight: 500; margin-top: -6px; }
+.h-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.h-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4338ca;
+  border: 1px solid #e0e7ff;
+}
+.h-tag.b-bundle { background: #fff7ed; color: #b45309; border-color: #fde68a; }
+.h-tag.b-saod { background: #f0fdf4; color: #047857; border-color: #bbf7d0; }
+.h-tag.b-tp { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+.h-tag-ghost { background: #f8fafc; color: var(--text-2); border-color: var(--border); }
+/* product badge on saved quotes (Fire / Theft / PA / Mediclaim plans) */
+.h-tag-product {
+  background: #eef2ff; color: #3730a3; border-color: #c7d2fe; font-weight: 700;
+}
+.h-mini { font-size: 11px; color: var(--text-3); font-weight: 600; }
+.h-actions { display: flex; gap: 8px; margin-top: 4px; }
+.h-btn {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text);
+  transition: var(--pro-transition);
+  font-family: inherit;
+}
+.h-btn:hover { border-color: var(--primary-light); color: var(--primary); background: #fff; }
+.h-btn-view { background: linear-gradient(135deg, #4f46e5, #6d28d9); color: #fff; border: none; flex: 1.4; }
+.h-btn-view:hover { color: #fff; filter: brightness(1.08); }
+.h-btn-danger { flex: 0 0 44px; }
+.h-btn-danger:hover { background: #fef2f2; border-color: #fca5a5; color: #dc2626; }
+
+.h-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  background: #fff;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: var(--pro-radius);
+}
+.h-empty-icon { font-size: 46px; margin-bottom: 10px; }
+.h-empty-title { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+.h-empty-sub { font-size: 13px; color: var(--text-2); margin-bottom: 18px; }
+.h-storage { font-size: 11px; color: var(--text-3); font-weight: 500; }
+
+/* =========================================================
+   TOASTS
+   ========================================================= */
+.toast-wrap {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: min(420px, calc(100vw - 36px));
+}
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 13px;
+  padding: 13px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.55;
+  box-shadow: 0 18px 40px -12px rgba(2, 6, 23, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  animation: toastIn 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  word-break: break-word;
+}
+@keyframes toastIn {
+  from { transform: translateX(110%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.toast-out { transition: all 0.25s ease; transform: translateX(110%); opacity: 0; }
+.toast-ico { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.toast-msg { flex: 1; }
+.toast-x {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #cbd5e1;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.toast-x:hover { background: rgba(255, 255, 255, 0.22); color: #fff; }
+.toast-success { border-left: 4px solid #10b981; }
+.toast-error { border-left: 4px solid #ef4444; }
+.toast-warning { border-left: 4px solid #f59e0b; }
+.toast-info { border-left: 4px solid #818cf8; }
+
+/* NOTE: fixed/sticky bottom bar removed on user request —
+   original in-form Calculate/Reset buttons (styles.css) are used. */
+
+/* ---------- kbd hints ---------- */
+.kbd-hint { font-size: 10px; color: var(--text-3); font-weight: 600; }
+kbd {
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  padding: 1px 6px;
+  color: var(--text-2);
+}
+
+/* ---------- about / pro touches ---------- */
+.pro-feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+.pro-feature {
+  background: linear-gradient(135deg, #f8faff, #fff);
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 12.5px;
+}
+.pro-feature b { display: block; font-size: 13px; margin-bottom: 4px; }
+.pro-feature span { color: var(--text-2); }
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+html[data-theme="dark"] {
+  --bg: #0b1120;
+  --bg-card: #111a2e;
+  --border: #22304d;
+  --text: #e6ecf7;
+  --text-2: #9fb0cc;
+  --text-3: #64748f;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.5);
+}
+html[data-theme="dark"] body,
+html[data-theme="dark"] .main {
+  background: #0b1120;
+  background-image: none;
+  color: var(--text);
+}
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .stepper,
+html[data-theme="dark"] .h-stat,
+html[data-theme="dark"] .h-card,
+html[data-theme="dark"] .h-empty,
+html[data-theme="dark"] .pro-top-btn,
+html[data-theme="dark"] .h-filter,
+html[data-theme="dark"] .h-mini-btn,
+html[data-theme="dark"] .h-btn,
+html[data-theme="dark"] .pro-feature {
+  background: #111a2e;
+  border-color: #22304d;
+  color: var(--text);
+}
+html[data-theme="dark"] .page-title { color: #f1f5f9; }
+html[data-theme="dark"] .page-title small { color: #9fb0cc; }
+html[data-theme="dark"] .field input:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="dark"] .field select,
+html[data-theme="dark"] .h-search input {
+  background: #0b1526;
+  border-color: #22304d;
+  color: #e6ecf7;
+}
+html[data-theme="dark"] .field input::placeholder { color: #5b6b8c; }
+html[data-theme="dark"] .cb-row:hover { background: #16223c; border-color: #2b3b5e; }
+html[data-theme="dark"] .breakdown-table thead th { background: #0b1526; color: #9fb0cc; }
+html[data-theme="dark"] .breakdown-table tbody tr:hover { background: #16223c; }
+html[data-theme="dark"] .breakdown-table td,
+html[data-theme="dark"] .breakdown-table th,
+html[data-theme="dark"] .final-table td { border-color: #22304d; }
+html[data-theme="dark"] .breakdown-table td { color: var(--text); }
+html[data-theme="dark"] .label-detail { color: #8fa1c2 !important; }
+html[data-theme="dark"] .stat-card { background: #0b1526; border-color: #22304d; }
+html[data-theme="dark"] .h-net { color: #c7d2fe; }
+html[data-theme="dark"] .h-tag { background: #1a2642; border-color: #2b3b5e; color: #c7d2fe; }
+html[data-theme="dark"] .h-tag.b-bundle { background: #2a2113; color: #fbbf24; border-color: #574410; }
+html[data-theme="dark"] .h-tag.b-saod { background: #0d2b20; color: #6ee7b7; border-color: #14532d; }
+html[data-theme="dark"] .h-tag.b-tp { background: #2c1414; color: #fca5a5; border-color: #7f1d1d; }
+html[data-theme="dark"] .h-tag-ghost { background: #0b1526; color: #9fb0cc; }
+html[data-theme="dark"] .h-btn { background: #0b1526; color: var(--text); }
+html[data-theme="dark"] .h-btn-view { background: linear-gradient(135deg, #4f46e5, #6d28d9); color: #fff; }
+html[data-theme="dark"] .h-qno { background: #f59e0b; color: #0b1120; }
+html[data-theme="dark"] .step-dot { background: #0b1526; border-color: #22304d; color: #64748f; }
+html[data-theme="dark"] .step-sep, html[data-theme="dark"] .step-bar { background: #1a2642; }
+html[data-theme="dark"] .btn-secondary { background: #0b1526; border-color: #22304d; color: var(--text); }
+html[data-theme="dark"] .sidebar { background: linear-gradient(180deg, #070c18 0%, #0d1526 100%); }
+html[data-theme="dark"] kbd { background: #0b1526; border-color: #22304d; color: #9fb0cc; }
+html[data-theme="dark"] .live-pill { background: rgba(16, 185, 129, 0.12); }
+html[data-theme="dark"] .note, html[data-theme="dark"] .bullet li { color: var(--text-2); }
+html[data-theme="dark"] .quote-doc {
+  background: #ffffff !important;
+  color: #1e293b !important;
+}
+html[data-theme="dark"] .quote-doc .quote-meta span,
+html[data-theme="dark"] .quote-doc .breakdown-table td,
+html[data-theme="dark"] .quote-doc .final-table td { color: #1e293b !important; border-color: #e2e8f0 !important; }
+html[data-theme="dark"] .quote-doc .breakdown-table thead th { background: #f8fafc !important; color: #64748b !important; }
+html[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #2b3b5e; background-clip: content-box; }
+
+/* ---------- small screens ---------- */
+@media (max-width: 640px) {
+  .main { padding: 18px 14px; }
+  .page-title { font-size: 21px; }
+  .hero-breakdown { flex-direction: column; gap: 8px; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .section-grid { grid-template-columns: 1fr !important; }
+  .top-bar { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+
+/* ============================================================
+   Sidebar slide-out sub-menu for Mediclaim
+   ============================================================ */
+.nav-item { position: relative; }
+
+.nav-caret {
+  margin-left: auto;
+  font-size: 10px;
+  opacity: .55;
+  transition: transform .25s ease;
+}
+.nav-caret.open { transform: rotate(180deg); opacity: .9; }
+
+/* Slide container — max-height animation */
+.nav-sub {
+  max-height: 0;
+  overflow: hidden;
+  margin-left: 12px;
+  opacity: 0;
+  transition: max-height .32s cubic-bezier(.4,0,.2,1), opacity .22s ease;
+}
+.nav-sub.open {
+  max-height: 320px;
+  opacity: 1;
+}
+.nav-sub-inner { padding: 4px 0 6px; }
+
+.nav-sub-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 8px 12px 8px 14px;
+  margin: 2px 0;
+  border: 0;
+  border-left: 2px solid rgba(148,163,184,.22);
+  border-radius: 0 8px 8px 0;
+  background: transparent;
+  color: inherit;
+  opacity: .75;
+  font: inherit;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+  transform: translateX(-6px);
+  transition: background .16s, opacity .16s, border-color .16s, transform .25s ease;
+}
+.nav-sub.open .nav-sub-item { transform: translateX(0); }
+.nav-sub-item:hover { background: rgba(148,163,184,.13); opacity: 1; }
+.nav-sub-item.active {
+  background: rgba(59,130,246,.16);
+  border-left-color: #3b82f6;
+  opacity: 1;
+  font-weight: 600;
+}
+.nav-sub-icon { font-size: 13px; width: 17px; text-align: center; flex: none; }
+
+/* Generate / Share button row under results */
+.hq-gen { display: flex; gap: 10px; }
+.hq-gen .btn-primary, .hq-gen .btn-secondary { flex: 1; }
+
+/* =========================================================
+   SIDEBAR VIEW FIX
+   Teen problems theek ki:
+   1. .brand ke paas koi padding nahi tha (HTML me .sidebar-top
+      wrapper hai hi nahi) -> logo screen ke kinare chipka tha
+   2. .sidebar-footer-card / .footer-meta ki CSS kahin nahi thi
+      (styles.css me .sidebar-card / .meta define hai) -> footer
+      bilkul unstyled dikhta tha
+   3. .sidebar par overflow:hidden tha -> Mediclaim ka sub-menu
+      khulne par neeche ka content cut ho jaata tha
+   ========================================================= */
+
+/* --- 1. Brand header --- */
+.sidebar > .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex: none;
+}
+.sidebar > .brand .logo-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  font-size: 15px;
+  flex: none;
+}
+.sidebar > .brand .brand-title {
+  font-size: 13.5px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.sidebar > .brand .brand-sub {
+  font-size: 9.5px;
+  line-height: 1.35;
+  margin-top: 2px;
+}
+
+/* --- 2. Scrollable nav area --- */
+.sidebar {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148,163,184,.35) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(148,163,184,.3);
+  border-radius: 3px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(148,163,184,.5); }
+
+/* nav sections: pehla flex:1 tha jisse dono sections aadha-aadha
+   khich jaate the — ab content jitni hi height lete hain */
+.sidebar .nav-section {
+  padding: 14px 12px 4px;
+  flex: none;
+}
+.sidebar .nav-section + .nav-section {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: 4px;
+  padding-top: 14px;
+}
+.sidebar .nav-label {
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  padding: 0 8px;
+  margin-bottom: 8px;
+}
+.sidebar .nav-item {
+  padding: 10px 12px;
+  font-size: 13px;
+  gap: 11px;
+  margin-bottom: 2px;
+  line-height: 1.25;
+}
+.sidebar .nav-icon { font-size: 16px; width: 20px; flex: none; }
+
+/* badge right side me chipka rahe */
+.sidebar .nav-item .nav-badge { margin-left: auto; }
+
+/* --- 3. Footer card (HTML classes ke hisaab se) --- */
+.sidebar-footer {
+  padding: 14px 12px 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: auto;
+  flex: none;
+}
+.sidebar-footer-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.sidebar-footer-card strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 5px;
+}
+.sidebar-footer-card .footer-meta {
+  font-size: 9.5px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.45);
+}
+
+/* --- mobile: styles.css me .sidebar-top target hai jo HTML me
+       maujood hi nahi — actual .brand par padding chhota karo --- */
+@media (max-width: 900px) {
+  .sidebar > .brand { padding: 16px 16px; }
+  .sidebar { width: 274px; }
+}
+
+/* --- sidebar ka apna width (desktop) --- */
+@media (min-width: 901px) {
+  .app-shell { grid-template-columns: 252px 1fr; }
+}
+
+/* =========================================================
+   DARK MODE COLOR FIXES
+   Un elements ke liye jinke colors hardcoded light the
+   ========================================================= */
+
+/* ---- Sidebar (V49 fix ke baad dark override chhut gaya tha) ---- */
+html[data-theme="dark"] .sidebar > .brand {
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+html[data-theme="dark"] .sidebar-footer-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+}
+html[data-theme="dark"] .footer-meta { color: #94a3b8; }
+html[data-theme="dark"] .nav-label   { color: #7c8db0; }
+html[data-theme="dark"] .brand-sub   { color: #94a3b8; }
+html[data-theme="dark"] .nav-badge {
+  background: rgba(255, 255, 255, 0.14);
+  color: #e6ecf7;
+}
+html[data-theme="dark"] .nav-item.active .nav-badge {
+  background: rgba(0, 0, 0, 0.28);
+  color: #fff;
+}
+
+/* ---- Modal (pure #fff tha, dark me chubh raha tha) ---- */
+html[data-theme="dark"] .modal-card {
+  background: #111a2e;
+  border: 1px solid #22304d;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+html[data-theme="dark"] .modal-title { color: #e6ecf7; }
+html[data-theme="dark"] .modal-sub   { color: #9fb0cc; }
+
+/* ---- Date input validation states (light green/red flash) ---- */
+html[data-theme="dark"] input.date-input.is-valid {
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: var(--text) !important;
+}
+html[data-theme="dark"] input.date-input.is-invalid {
+  background: rgba(239, 68, 68, 0.14) !important;
+  color: var(--text) !important;
+}
+
+/* ---- Fire / Theft / PA / Mediclaim (other.js) panes ---- */
+html[data-theme="dark"] .op-result {
+  background: var(--bg-card);
+  border-color: rgba(245, 158, 11, 0.30);
+}
+html[data-theme="dark"] .op-result td {
+  color: var(--text);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+html[data-theme="dark"] .op-result tr.op-sub td {
+  background: rgba(245, 158, 11, 0.10);
+}
+html[data-theme="dark"] .op-tab { color: var(--text-2); }
+html[data-theme="dark"] .op-tab:hover { background: rgba(245, 158, 11, 0.16); }
+html[data-theme="dark"] .op-tax {
+  background: rgba(59, 130, 246, 0.14);
+  color: var(--text-2);
+}
+html[data-theme="dark"] .op-note {
+  background: rgba(148, 163, 184, 0.10);
+  color: var(--text-3);
+}
+
+/* ---- Hero / stat strip ---- */
+html[data-theme="dark"] .hero-label,
+html[data-theme="dark"] .hero-stat-label { color: #9fb0cc; }
+html[data-theme="dark"] .hero-stat-value { color: #e6ecf7; }
+
+/* ---- History delete button ---- */
+html[data-theme="dark"] .h-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.16);
+  border-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* ---- Commission row (amber on white) ---- */
+html[data-theme="dark"] .final-table tr.commission-row td { color: #fbbf24; }
+html[data-theme="dark"] .final-table tr.commission-row td:last-child { color: #fcd34d; }
+
+/* ---- Badge pill ---- */
+html[data-theme="dark"] .badge-pill {
+  background: rgba(255, 255, 255, 0.10);
+  color: #e6ecf7;
+}
+
+/* ---- Bullet lists / notes in About ---- */
+html[data-theme="dark"] ul.bullet li { color: var(--text-2); }
+html[data-theme="dark"] .note {
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--text-2);
+}
+html[data-theme="dark"] .footer { color: var(--text-3); }
+
+/* ---- Health plan sub-menu (med-nav.js) ---- */
+html[data-theme="dark"] .nav-sub-item { color: #b6c4dd; }
+html[data-theme="dark"] .nav-sub-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* ---- Excel export button ---- */
+.btn-excel {
+  background: linear-gradient(135deg, #107c41, #0e6b38) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.btn-excel:hover { filter: brightness(1.08); }
+html[data-theme="dark"] .btn-excel {
+  background: linear-gradient(135deg, #16a34a, #107c41) !important;
+  color: #fff !important;
+}
+
+
+
+/* =========================================================
+   V50.1 · PRINT — MASTER SHEET
+   ---------------------------------------------------------
+   styles.css me 4 alag @media print blocks the jo aapas me
+   takra rahe the, aur unke saare rules Motor ke IDs
+   (#qOdTable, #qTpTable) par hard-coded the — isliye
+   Health/PA quotation print par bikhri hui aati thi.
+   Ye block sabse aakhir me load hota hai, to yahi jeetta hai.
+   ========================================================= */
+@page { size: A4 portrait; margin: 9mm; }
+
+@media print {
+
+  /* ---------- 1. Chrome / UI sab hatao ---------- */
+  .sidebar, .sidebar-overlay, .top-bar, .footer, .action-row,
+  .quote-toolbar, .modal-overlay, .op-tabs, .stepper,
+  .no-print, .btn-excel, .hq-gen, .btn-row,
+  .doc-watermark, .quote-doc::before {
+    display: none !important;
+  }
+
+  /* ---------- 2. Page shell ---------- */
+  html, body {
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+  .app-shell { display: block !important; grid-template-columns: 1fr !important; }
+  .main {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  /* Sirf khula hua tab chhape */
+  .tab-content { display: none !important; }
+  .tab-content.active { display: block !important; }
+
+  /* ---------- 3. Colors kaagaz par bhi aayein ---------- */
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  /* Dark mode me print karo to bhi kaagaz light — Fire/Theft/PA ke result
+     cards bhi (wo .quote-doc nahi hain, isliye alag se cover kiye) */
+  html[data-theme="dark"] body,
+  html[data-theme="dark"] .main,
+  html[data-theme="dark"] .quote-doc { background: #fff !important; }
+  html[data-theme="dark"] .card,
+  html[data-theme="dark"] .op-pane,
+  html[data-theme="dark"] .op-result {
+    background: #fff !important; color: #0f172a !important;
+  }
+  html[data-theme="dark"] .quote-doc,
+  html[data-theme="dark"] .quote-doc :not(.quote-summary):not(.quote-summary *) {
+    color: #1e293b !important;
+  }
+
+  /* ---------- 4. Document body ---------- */
+  .quote-doc {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    page-break-inside: auto !important;
+  }
+
+  /* ---------- 5. Header ---------- */
+  .quote-head {
+    margin-bottom: 7px !important;
+    padding-bottom: 6px !important;
+    border-bottom: 1.5px solid #0a2540 !important;
+    page-break-inside: avoid !important;
+  }
+  .logo-circle {
+    width: 38px !important; height: 38px !important;
+    font-size: 14px !important; line-height: 38px !important;
+  }
+  .brand-title  { font-size: 15px !important; letter-spacing: .2px !important; }
+  .quote-no-label { font-size: 10px !important; }
+  .quote-num    { font-size: 19px !important; }
+
+  /* ---------- 6. Summary strip ---------- */
+  .quote-summary {
+    padding: 11px 15px !important;
+    margin-bottom: 10px !important;
+    border-radius: 5px !important;
+    page-break-inside: avoid !important;
+  }
+  .quote-summary .qs-title { font-size: 9px !important; letter-spacing: 1.4px !important; margin-bottom: 7px !important; }
+  .quote-summary .qs-grid  { gap: 10px !important; grid-template-columns: repeat(4, 1fr) !important; }
+  .quote-summary .qs-item span { font-size: 9.5px !important; }
+  .quote-summary .qs-item b    { font-size: 16px !important; }
+  .quote-summary .qs-grand     { padding-left: 9px !important; }
+  .quote-summary .qs-grand b   { font-size: 17px !important; }
+
+  /* ---------- 7. Meta grid (Motor 5-col, Health 3-col) ---------- */
+  .quote-meta {
+    gap: 5px 13px !important;
+    margin-bottom: 10px !important;
+    font-size: 10.4px !important;
+    page-break-inside: avoid !important;
+  }
+  #qMeta  { grid-template-columns: repeat(5, 1fr) !important; }
+  #hqMeta { grid-template-columns: repeat(3, 1fr) !important; }
+  .quote-meta div { font-size: 10.4px !important; line-height: 1.35 !important; }
+  .quote-meta strong { display: block !important; font-size: 9px !important; color: #64748b !important; }
+
+  /* ---------- 8. Chips ---------- */
+  .chip-row { gap: 7px !important; margin-bottom: 9px !important; }
+  .chip-row span, #qPeriodLabel, #qAgeLabel {
+    font-size: 9.4px !important; padding: 3px 8px !important;
+  }
+
+  /* ---------- 9. Section headings ---------- */
+  h3.sec, h3.card-title, .quote-doc h3 {
+    font-size: 12.5px !important;
+    margin: 11px 0 5px !important;
+    padding-bottom: 3px !important;
+    page-break-after: avoid !important;
+  }
+
+  /* ---------- 10. Tables — class based, dono products ---------- */
+  .breakdown-table, table.bt, #qOdTable, #qTpTable, #hqTable, #hqCovers {
+    width: 100% !important;
+    font-size: 10.6px !important;
+    border-collapse: collapse !important;
+    margin-bottom: 6px !important;
+    page-break-inside: auto !important;
+  }
+  .breakdown-table th, table.bt th,
+  #qOdTable th, #qTpTable th, #hqTable th, #hqCovers th {
+    font-size: 9.6px !important;
+    padding: 5px 7px !important;
+    line-height: 1.25 !important;
+  }
+  .breakdown-table td, table.bt td,
+  #qOdTable td, #qTpTable td, #hqTable td, #hqCovers td {
+    padding: 4px 7px !important;
+    line-height: 1.3 !important;
+  }
+  .label-main   { font-size: 10.6px !important; }
+  .label-detail { font-size: 8.8px !important; line-height: 1.2 !important; }
+
+  /* ---------- 11. Totals ---------- */
+  .final-table, table.ft {
+    font-size: 11.5px !important;
+    margin-top: 8px !important;
+    page-break-inside: avoid !important;
+  }
+  .final-table td, table.ft td { padding: 4px 8px !important; }
+  .final-table tr.grand td, table.ft tr.grand td { font-size: 14px !important; }
+
+  /* ---------- 12. Footer / signature ---------- */
+  .quote-foot {
+    margin-top: 14px !important;
+    gap: 16px !important;
+    flex-wrap: nowrap !important;
+    page-break-inside: avoid !important;
+  }
+  .sig-block { font-size: 9.4px !important; }
+  .sig-line  { margin-top: 18px !important; height: 22px !important; }
+  .disclaimer, .hq-notes, #hqNotes {
+    font-size: 8.8px !important;
+    line-height: 1.35 !important;
+    margin-top: 9px !important;
+  }
+  /* "Generated … · Customized by …" line — bold & dark in print/PDF */
+  .disclaimer strong, .hq-notes strong, #hqNotes strong {
+    font-weight: 800 !important;
+    color: #0a2540 !important;
+    font-style: normal !important;
+  }
+  /* the quotation's "Generated … · Customized by …" line, tagged explicitly */
+  .quote-doc .disclaimer strong, .quote-doc strong.generated-by,
+  .quote-doc .footer-meta strong {
+    font-weight: 800 !important; color: #0a2540 !important; font-style: normal !important;
+  }
+  #hqNotes li { margin-bottom: 1px !important; }
+
+  /* ---------- 13. Page-break hygiene ---------- */
+  tr, .qs-item, .sig-block { page-break-inside: avoid !important; }
+  thead { display: table-header-group !important; }
+  tfoot { display: table-footer-group !important; }
+  .quote-doc > *:last-child { page-break-after: auto !important; }
+
+  /* "Not opted" / zero-value rows print par chhupao — jagah bachti hai.
+     (app.js in rows par .muted lagata hai) */
+  tr.muted, .breakdown-table tr.muted { display: none !important; }
+  /* Lekin inline .muted text (jaise footer note) chhupana nahi hai */
+  span.muted, td.muted, div.muted { display: initial !important; opacity: .6 !important; }
+}
+
+/* =========================================================
+   DARK MODE · TEXT CONTRAST PASS
+   index.html carries a number of inline `style="color:#…"` values written for
+   the LIGHT theme. Inline styles beat every class rule, so in dark mode those
+   labels/hints went unreadable. The fixes are grouped here (HTML untouched).
+   The quotation document (.quote-doc) is deliberately paper-white in both
+   themes, so every rule below excludes it.
+   ========================================================= */
+/* amber "DD-MM-YYYY" / reg-no hints inside field labels */
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .field label span[style*="#b45309"] {
+  color: #fcd34d !important;
+}
+/* small coloured sub-labels: SI boxes, towing, CPA term, passenger PA */
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .field label[style*="#1e40af"],
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .field label[style*="#854d0e"],
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .field label[style*="#0369a1"],
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .field label[style*="#92400e"],
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .form-section label[style*="#92400e"] {
+  color: #bfdbfe !important;
+}
+/* tinted hint boxes (persBelong / towing / cpa / passenger-PA) */
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .form-section div[style*="background:#f0fdf4"],
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .field[style*="background:#fffbeb"],
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .form-section div[style*="background:#fffbeb"],
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .form-section div[style*="background:#f0f9ff"],
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .form-section div[style*="background:#fff7ed"],
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .form-section div[style*="background:#eff6ff"],
+html[data-theme="dark"] #fTheftRateWrap {
+  background: #101a30 !important;
+  border-color: #2b3b5e !important;
+}
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .form-section div[style*="color:#854d0e"],
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .form-section div[style*="color:#92400e"],
+html[data-theme="dark"] #cpaTermHint { color: #c7d2fe !important; }
+html[data-theme="dark"] .tab-content:not(#tab-quote):not(#tab-hquote) .form-section div[style*="color:#64748b"] { color: #a9b8d8 !important; }
+
+/* Today shortcut link */
+html[data-theme="dark"] #todayBtn { color: #93c5fd !important; }
+html[data-theme="dark"] #todayBtn:hover { color: #bfdbfe !important; }
+
+/* Fire / Theft / PA / Mediclaim result tables: labels + any grey note cells */
+html[data-theme="dark"] .op-result td { color: var(--text); }
+html[data-theme="dark"] .op-result td[style*="color:#64748b"],
+html[data-theme="dark"] .op-result div[style*="color:var(--text-3)"],
+html[data-theme="dark"] .op-result .label-detail { color: #a9b8d8 !important; }
+
+/* History: product badge (light + dark) */
+html[data-theme="dark"] .h-tag-product {
+  background: #1e245c; color: #c7d2fe; border-color: #37417e;
+}
+/* =========================================================
+   DARK MODE · PASS 3 — HOME PAGE TABLES & CONTROLS
+   (10-Sep-2026) Shikayat: dark mode me calculator ke neeche wala box —
+   OD/TP breakdown, "Total Premium before GST", GST @18%, Net Premium Payable,
+   Agent Commission — kaagaz jaisa safed dikh raha tha.
+   Kyu: ye apne aap par `background: var(--white)` rakhte hain, aur --white
+   dark theme me remap nahi hai (wo hero/nav/logo ke TEXT colour ke liye bhi
+   use hota hai, isliye variable chhuna safe nahi tha). Har offender ko yahan
+   explicitly cover kiya gaya hai.
+   Quotation document (.quote-doc) ko jaan-boojhkar end me dobara paper-white
+   kar diya gaya hai — print/PDF layout bilkul same rahe.
+   ========================================================= */
+
+/* OD / TP breakdown + rate card tables */
+html[data-theme="dark"] .breakdown-table,
+html[data-theme="dark"] .rate-table {
+  background: #0b1526 !important;
+  border-color: #22304d !important;
+  color: var(--text) !important;
+}
+html[data-theme="dark"] .breakdown-table th,
+html[data-theme="dark"] .rate-table th {
+  background: #101d34 !important;
+  color: #9fb0cc !important;
+}
+html[data-theme="dark"] .breakdown-table tbody tr:hover { background: #16223c !important; }
+html[data-theme="dark"] .breakdown-table .final-row td {
+  background: rgba(245, 158, 11, .12) !important;
+  color: #fcd34d !important;
+}
+html[data-theme="dark"] .breakdown-table td { color: var(--text) !important; }
+html[data-theme="dark"] .breakdown-table .negative { color: #fca5a5 !important; }
+html[data-theme="dark"] .breakdown-table .positive { color: #6ee7b7 !important; }
+
+/* Total / GST / Net / Commission table */
+html[data-theme="dark"] .final-table {
+  background: #0b1526 !important;
+  border-color: #22304d !important;
+}
+html[data-theme="dark"] .final-table td { color: var(--text) !important; border-bottom-color: #22304d !important; }
+html[data-theme="dark"] .final-table tr.bold td {
+  background: #101d34 !important;
+  color: #e6ecf7 !important;
+}
+html[data-theme="dark"] .final-table tr.grand td {
+  background: linear-gradient(135deg, #1e293b 0%, #312e81 100%) !important;
+  color: #ffffff !important;
+}
+html[data-theme="dark"] .final-table tr.grand td:last-child { color: #fcd34d !important; }
+html[data-theme="dark"] .final-table tr.commission-row td {
+  background: rgba(245, 158, 11, .10) !important;
+  border-top-color: rgba(245, 158, 11, .45) !important;
+  color: #fbbf24 !important;
+}
+html[data-theme="dark"] .final-table tr.commission-row td:last-child { color: #fcd34d !important; }
+
+/* stat cards + checkbox rows (add-ons) + inner controls */
+/* .stat-card sits on the page background (#0b1120) — pass-1 had painted it
+   #0b1526, i.e. the same colour as the page, so the card outline vanished.
+   Lift it one notch and give it a visible border instead. */
+html[data-theme="dark"] .stat-card {
+  background: #16223c !important;
+  border-color: #2b3b5e !important;
+}
+html[data-theme="dark"] .stat-card-value.green { color: #6ee7b7 !important; }
+html[data-theme="dark"] .cb-row {
+  background: #0b1526 !important;
+  border-color: #22304d !important;
+  color: var(--text) !important;
+}
+html[data-theme="dark"] .cb-row input[type="checkbox"],
+html[data-theme="dark"] .cb-row input[type="radio"] {
+  background: #101d34 !important;
+  border-color: #2b3b5e !important;
+  accent-color: #6366f1;
+}
+html[data-theme="dark"] .field select:focus { background: #0b1526 !important; }
+
+/* stepper dots */
+html[data-theme="dark"] .stepper { background: #0b1526 !important; border-color: #22304d !important; }
+html[data-theme="dark"] .step-dot { background: #101d34 !important; border-color: #2b3b5e !important; color: #9fb0cc !important; }
+html[data-theme="dark"] .step-sep,
+html[data-theme="dark"] .step-bar { background: #1a2642 !important; }
+
+/* About tab rate cards, history chips, kbd, notes, green "valid date" tick */
+html[data-theme="dark"] .rate-card {
+  background: #111a2e !important;
+  border-color: #22304d !important;
+  color: var(--text) !important;
+}
+html[data-theme="dark"] .h-tag { background: #1a2642 !important; color: #c7d2fe !important; border-color: #2b3b5e !important; }
+html[data-theme="dark"] kbd { background: #1a2642 !important; color: #c7d2fe !important; }
+html[data-theme="dark"] .note { background: rgba(59, 130, 246, .12) !important; color: var(--text-2) !important; }
+html[data-theme="dark"] input.date-input.is-valid {
+  background: rgba(16, 185, 129, .14) !important;
+  border-color: rgba(16, 185, 129, .45) !important;
+  color: var(--text) !important;
+}
+
+/* Dark page background: the navy 'OICL' watermark (.main's background-image,
+   fill-opacity .03) was invisible. Re-declare it with a faint WHITE fill — only
+   for .main, so .card/.quote-doc keep the dark navy watermark on paper. */
+html[data-theme="dark"] .main {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='280'%20height='180'%3E%3Ctext%20x='8'%20y='105'%20transform='rotate(-35%208%20105)'%20font-family='Arial,sans-serif'%20font-size='36'%20font-weight='bold'%20fill='%23ffffff'%20fill-opacity='0.045'%3EOICL%3C/text%3E%3C/svg%3E");
+}
+
+/* ---- Quotation document: paper stays paper, in both themes ---- */
+html[data-theme="dark"] .quote-doc .breakdown-table,
+html[data-theme="dark"] .quote-doc .rate-table,
+html[data-theme="dark"] .quote-doc .final-table {
+  background: #fff !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+html[data-theme="dark"] .quote-doc .breakdown-table th,
+html[data-theme="dark"] .quote-doc .rate-table th { background: #f8fafc !important; color: #64748b !important; }
+html[data-theme="dark"] .quote-doc .breakdown-table td,
+html[data-theme="dark"] .quote-doc .final-table td { color: #1e293b !important; border-bottom-color: #f1f5f9 !important; }
+html[data-theme="dark"] .quote-doc .final-table tr.bold td { background: #f8fafc !important; color: #0f172a !important; }
+html[data-theme="dark"] .quote-doc .final-table tr.grand td {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important; color: #fff !important;
+}
+html[data-theme="dark"] .quote-doc .final-table tr.grand td:last-child { color: #fbbf24 !important; }
+html[data-theme="dark"] .quote-doc .final-table tr.commission-row td {
+  background: #fffbeb !important; color: #b45309 !important; border-top-color: #f59e0b !important;
+}
+html[data-theme="dark"] .quote-doc .final-table tr.commission-row td:last-child { color: #b45309 !important; }

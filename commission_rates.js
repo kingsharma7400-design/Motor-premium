@@ -1,5 +1,5 @@
 /* =========================================================
-   COMMISSION RATES — CIRCULAR-8811 w.e.f 01.07.2026
+   COMMISSION RATES
    =========================================================
    IMPORTANT: This is the ONLY file you need to update when
    commission rates change. Do NOT edit rates.js or app.js
@@ -36,7 +36,7 @@ function isStateExcluded(state, excludedStates) {
 
 /* GCCV commission — GVW-banded (OD% / TP% differ for Liability vs Package).
    Commission tiers based on U/W discount for new vehicles.
-   w.e.f 01.07.2026 (CIRCULAR-8811) */
+   */
 function gccvComm(gvw, policyType, uwDiscount, state) {
   gvw = parseFloat(gvw) || 0;
   var tier = getCommTier(uwDiscount);
@@ -172,7 +172,7 @@ function gccvComm(gvw, policyType, uwDiscount, state) {
   return { od: net, tp: net, note: (net === 0 ? 'NIL' : net + '%') + ' on net premium' };
 }
 
-/* Commission profiles — w.e.f. 01.07.2026 (CIRCULAR-8811)
+/* Commission profiles
    A profile entry may be:
      • a flat object    { od, tp }
      • an age-banded array [ { maxAge, od, tp }, ... ]
