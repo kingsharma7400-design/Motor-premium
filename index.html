@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OICL Premium Calculator V31.0 · Motor · Fire &amp; Theft · PA · Mediclaim</title>
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="styles-pro.css" />
+<link rel="stylesheet" href="styles-other.css" />
+<style>
+/* DD-MM-YYYY date field enhancements */
+.date-field-wrap { position: relative; }
+.date-field-wrap input.date-input {
+  padding-right: 42px;
+  letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.date-field-wrap .date-icon {
+  position: absolute;
+  right: 12px;
+  bottom: 11px;
+  font-size: 14px;
+  color: var(--text-3);
+  pointer-events: none;
+}
+.date-hint {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 3px;
+  font-weight: 500;
+}
+.date-hint b { color: var(--accent); }
+input.date-input.is-valid { border-color: #10b981 !important; background: #f0fdf4 !important; }
+input.date-input.is-invalid { border-color: #ef4444 !important; background: #fef2f2 !important; }
+.quote-meta { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 900px) { .quote-meta { grid-template-columns: repeat(2, 1fr); } }
+.date-badge {
+  display:inline-block; font-size:10px; font-weight:700; background:#fff7ed; color:#b45309;
+  padding:2px 8px; border-radius:6px; margin-left:6px; border:1px solid #fde68a;
+}
+
+/* ========== SMART QUICK QUOTE · V31 ========== */
+.smart-quote {
+  margin: 2px 0 18px;
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 52%, #ecfdf5 100%);
+  box-shadow: 0 8px 24px rgba(30, 64, 175, .08);
+}
+.smart-quote-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; padding:16px 18px 12px; border-bottom:1px solid rgba(147,197,253,.7); }
+.smart-quote-eyebrow { margin:0 0 4px; color:#2563eb; font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+.smart-quote-title { margin:0; color:#0f172a; font-size:18px; line-height:1.2; }
+.smart-quote-copy { margin:5px 0 0; color:#475569; font-size:12px; line-height:1.45; max-width:650px; }
+.smart-quote-state { flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; border:1px solid #86efac; border-radius:999px; padding:6px 10px; background:#f0fdf4; color:#166534; font-size:11px; font-weight:800; }
+.smart-quote-state .pulse { width:7px; height:7px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 3px rgba(34,197,94,.15); }
+.smart-step-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:12px 18px 0; }
+.smart-step { display:flex; align-items:center; gap:8px; min-width:0; color:#475569; font-size:11px; font-weight:700; }
+.smart-step b { display:inline-grid; place-items:center; width:21px; height:21px; flex:0 0 21px; border-radius:50%; background:#dbeafe; color:#1d4ed8; font-size:11px; }
+.smart-quote-body { padding:14px 18px 16px; }
+.smart-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.smart-field { display:flex; flex-direction:column; gap:5px; min-width:0; }
+.smart-field.wide { grid-column:span 2; }
+.smart-field label { color:#334155; font-size:10px; font-weight:800; letter-spacing:.025em; text-transform:uppercase; }
+.smart-field label em { color:#dc2626; font-style:normal; }
+.smart-field input, .smart-field select { width:100%; min-height:38px; border:1px solid #cbd5e1; border-radius:8px; padding:8px 10px; background:#fff; color:#0f172a; font-size:13px; outline:none; box-sizing:border-box; transition:border-color .15s, box-shadow .15s; }
+.smart-field input:focus, .smart-field select:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.13); }
+.smart-field .smart-help { min-height:13px; color:#64748b; font-size:10px; line-height:1.3; }
+.smart-field .smart-help.warn { color:#b45309; }
+.smart-addon-box { grid-column:1 / -1; border:1px solid #dbeafe; border-radius:10px; padding:11px 12px 10px; background:rgba(255,255,255,.78); }
+.smart-addon-title { display:flex; align-items:center; justify-content:space-between; gap:12px; color:#1e3a8a; font-size:11px; font-weight:800; }
+.smart-addon-title small { color:#64748b; font-size:10px; font-weight:600; }
+.smart-addon-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:9px; }
+.smart-addon { display:inline-flex; align-items:center; gap:6px; border:1px solid #cbd5e1; border-radius:999px; padding:6px 9px; background:#fff; color:#334155; font-size:11px; font-weight:700; cursor:pointer; user-select:none; }
+.smart-addon:has(input:checked) { border-color:#60a5fa; background:#dbeafe; color:#1d4ed8; }
+.smart-addon input { width:14px; height:14px; accent-color:#2563eb; }
+.quick-passpa-options { display:flex; align-items:center; flex-wrap:wrap; gap:8px 10px; margin-top:10px; padding:9px 10px; border:1px solid #c4b5fd; border-radius:8px; background:#f5f3ff; color:#5b21b6; }
+.quick-passpa-options label { font-size:10px; font-weight:800; letter-spacing:.025em; text-transform:uppercase; }
+.quick-passpa-options label span { text-transform:none; font-weight:600; }
+.quick-passpa-options select { min-height:32px; border:1px solid #a78bfa; border-radius:7px; padding:6px 9px; background:#fff; color:#4c1d95; font-size:12px; font-weight:700; }
+.quick-passpa-options small { flex:1 1 220px; color:#6d28d9; font-size:9px; font-weight:600; line-height:1.35; }
+.smart-quick-actions { display:flex; align-items:center; flex-wrap:wrap; gap:9px; margin-top:14px; }
+.quick-result-actions { margin-top:11px; padding:11px; border:1px solid #dbeafe; border-radius:11px; background:linear-gradient(135deg,rgba(239,246,255,.82),rgba(248,250,252,.92)); }
+.quick-result-actions[hidden] { display:none; }
+.quick-premium-summary { display:grid; grid-template-columns:minmax(220px,1.25fr) repeat(3,minmax(138px,1fr)); gap:9px; }
+.quick-commission-card, .quick-metric-card { min-height:72px; box-sizing:border-box; border-radius:9px; padding:10px 12px; box-shadow:0 3px 8px rgba(15,23,42,.05); }
+.quick-commission-card { display:grid; grid-template-columns:auto auto; column-gap:10px; align-items:center; border:1px solid #fcd34d; background:linear-gradient(135deg,#fffbeb,#fef3c7); color:#92400e; }
+.quick-commission-label, .quick-metric-label { font-size:10px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+.quick-commission-value, .quick-metric-value { font-size:17px; font-variant-numeric:tabular-nums; line-height:1.1; }
+.quick-commission-value { justify-self:end; }
+.quick-commission-card small { grid-column:1 / -1; margin-top:2px; color:#a16207; font-size:9px; font-weight:700; line-height:1.3; }
+.quick-metric-card { display:flex; flex-direction:column; justify-content:center; gap:3px; border:1px solid; }
+.quick-metric-card small { font-size:9px; font-weight:700; opacity:.76; }
+.quick-metric-total { border-color:#93c5fd; background:linear-gradient(135deg,#eff6ff,#dbeafe); color:#1d4ed8; }
+.quick-metric-gst { border-color:#c4b5fd; background:linear-gradient(135deg,#f5f3ff,#ede9fe); color:#6d28d9; }
+.quick-metric-net { border-color:#6ee7b7; background:linear-gradient(135deg,#ecfdf5,#d1fae5); color:#047857; }
+.quick-metric-net .quick-metric-value { font-size:19px; }
+.quick-export-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; padding-top:10px; border-top:1px dashed #bfdbfe; }
+.quick-output-btn { flex:1 1 165px; appearance:none; border:1px solid; border-radius:8px; padding:10px 13px; cursor:pointer; font-size:12px; font-weight:800; box-shadow:0 2px 5px rgba(15,23,42,.05); transition:transform .15s ease,filter .15s ease,box-shadow .15s ease; }
+.quick-output-btn:hover { transform:translateY(-1px); filter:brightness(1.02); box-shadow:0 5px 11px rgba(15,23,42,.10); }
+.quick-share-btn { border-color:#93c5fd; background:#eff6ff; color:#1d4ed8; }
+.quick-pdf-btn { border-color:#fdba74; background:#fff7ed; color:#c2410c; }
+.quick-excel-btn { border-color:#86efac; background:#f0fdf4; color:#15803d; }
+.smart-calc-btn { appearance:none; border:0; border-radius:8px; padding:10px 14px; background:linear-gradient(135deg,#1d4ed8,#2563eb); box-shadow:0 6px 14px rgba(37,99,235,.22); color:white; cursor:pointer; font-size:13px; font-weight:800; }
+.smart-calc-btn:hover { filter:brightness(1.05); transform:translateY(-1px); }
+.smart-edit-btn { appearance:none; border:1px solid #93c5fd; border-radius:8px; padding:9px 12px; background:#fff; color:#1d4ed8; cursor:pointer; font-size:12px; font-weight:800; }
+.smart-edit-btn:hover { background:#eff6ff; }
+.smart-auto-note { margin-left:auto; color:#64748b; font-size:10px; line-height:1.35; }
+.smart-status { display:none; margin-top:11px; border-radius:8px; padding:8px 10px; font-size:11px; font-weight:700; line-height:1.35; }
+.smart-status.info { display:block; color:#1d4ed8; background:#dbeafe; border:1px solid #bfdbfe; }
+.smart-status.error { display:block; color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; }
+.advanced-fields { display:none; }
+.advanced-fields.is-open { display:block; animation:smartReveal .18s ease-out; }
+@keyframes smartReveal { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+.advanced-panel-note { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:4px 0 12px; border:1px dashed #93c5fd; border-radius:9px; padding:10px 12px; background:#f8fbff; color:#1e40af; font-size:11px; line-height:1.4; }
+.advanced-panel-note button { border:0; padding:4px 0; background:transparent; color:#1d4ed8; cursor:pointer; font-size:11px; font-weight:800; text-decoration:underline; }
+.smart-quote .smart-error-field { border-color:#ef4444 !important; box-shadow:0 0 0 3px rgba(239,68,68,.1) !important; }
+@media (max-width: 760px) { .smart-quote-head { flex-direction:column; } .smart-quote-state { align-self:flex-start; } .smart-grid { grid-template-columns:1fr 1fr; } .smart-field.wide { grid-column:span 2; } .smart-auto-note { width:100%; margin-left:0; } .quick-premium-summary { grid-template-columns:repeat(2,minmax(0,1fr)); } .quick-commission-card { grid-column:span 2; } .quick-output-btn { flex:1 1 150px; } }
+@media (max-width: 520px) { .quick-premium-summary { grid-template-columns:1fr; } .quick-commission-card { grid-column:span 1; } .quick-output-btn { flex-basis:100%; } }
+@media (max-width: 460px) { .smart-grid { grid-template-columns:1fr; } .smart-field.wide { grid-column:span 1; } .smart-step-strip { grid-template-columns:1fr; gap:5px; } }
+
+</style>
+<style id="fireQuoteStyles">
+/* Fire quote schedule extension — scoped to the Fire pane. */
+#tab-fire .fire-quote{overflow:hidden}
+#tab-fire .fire-source-badge{margin-left:auto;border:1px solid #f8c58f;background:#fff7ed;color:#9a3412;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:999px}
+#tab-fire .fire-intro{font-size:12px;line-height:1.55;color:var(--text-2);margin:-2px 0 14px}
+#tab-fire .field-full{grid-column:1/-1}
+#tab-fire .fire-policy-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:0 0 12px}
+#tab-fire .field-grid-contents{display:contents}
+#tab-fire .fire-bgr-terror{max-width:280px;margin-top:12px}
+#tab-fire .fire-policy-tabs button{border:1px solid #dbe4f0;background:#fff;color:#475569;border-radius:10px;padding:9px 7px;font-weight:800;font-size:11px;line-height:1.15;cursor:pointer}
+#tab-fire .fire-policy-tabs button small{display:block;color:#94a3b8;font-size:9px;font-weight:700;margin-top:3px}
+#tab-fire .fire-policy-tabs button.active{border-color:#f97316;background:#fff7ed;color:#9a3412;box-shadow:inset 0 0 0 1px #fed7aa}
+#tab-fire .fire-policy-tabs button.active small{color:#c2410c}
+#tab-fire .fire-policy-hint,#tab-fire .fire-rate-status{font-size:11px;line-height:1.45;border-radius:8px;padding:8px 10px;margin-top:9px}
+#tab-fire .fire-policy-hint{background:#f8fafc;border:1px solid #e2e8f0;color:#475569}
+#tab-fire .fire-policy-hint.warn{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+#tab-fire .fire-rate-status{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46}
+#tab-fire .fire-rate-status strong{font-size:13px}
+#tab-fire .fire-rate-status.warn{background:#fffbeb;border-color:#fde68a;color:#92400e}
+#tab-fire .fire-rate-status.treaty{background:#faf5ff;border-color:#d8b4fe;color:#6b21a8}
+#tab-fire .fire-option-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+#tab-fire .fire-check{display:flex;gap:7px;align-items:flex-start;border:1px solid #e2e8f0;border-radius:9px;padding:9px;cursor:pointer;background:#fff}
+#tab-fire .fire-check input{width:auto;min-height:auto;margin-top:2px;accent-color:#ea580c}
+#tab-fire .fire-check b{display:block;color:#334155;font-size:11px}
+#tab-fire .fire-check small{display:block;color:#94a3b8;font-size:9.5px;line-height:1.3;margin-top:2px}
+#tab-fire .fire-addon-list{margin-top:12px;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff}
+#tab-fire .fire-addon-head{display:flex;justify-content:space-between;gap:10px;background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:9px 10px;color:#475569;font-size:10px;font-weight:800;letter-spacing:.02em;text-transform:uppercase}
+#tab-fire .fire-addon{display:grid;grid-template-columns:minmax(0,1fr) 90px;gap:8px;padding:10px;border-bottom:1px solid #edf2f7;background:#fff;transition:background .15s}
+#tab-fire .fire-addon:last-child{border-bottom:none}
+#tab-fire .fire-addon.selected{background:#fffaf5}
+#tab-fire .fire-addon-main{display:flex;gap:8px;align-items:flex-start;cursor:pointer;min-width:0}
+#tab-fire .fire-addon-main input{width:auto;min-height:auto;margin-top:3px;accent-color:#ea580c}
+#tab-fire .fire-addon-main b{display:block;font-size:11px;line-height:1.3;color:#334155}
+#tab-fire .fire-addon-main small{display:block;font-size:9.5px;line-height:1.35;color:#94a3b8;margin-top:3px}
+#tab-fire .fire-addon-disc{font-size:9px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:.04em;align-self:center}
+#tab-fire .fire-addon-disc input{min-height:31px;padding:6px 7px;font-size:11px;margin-top:3px}
+#tab-fire .fire-addon-value{grid-column:1/-1;margin-left:24px;background:#fff7ed;border-left:3px solid #fb923c;padding:7px 8px;border-radius:0 6px 6px 0}
+#tab-fire .fire-addon-value label{font-size:9.5px;color:#9a3412;font-weight:800;display:block;margin-bottom:4px}
+#tab-fire .fire-addon-value label span{font-weight:500;color:#c2410c}
+#tab-fire .fire-addon-value em{font-style:normal;color:#b91c1c}
+#tab-fire .fire-addon-value input{min-height:32px;padding:6px 8px;font-size:11px;background:#fff}
+#tab-fire .fire-addon-free-title{background:#f0fdf4;color:#166534;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:8px 10px;border-top:1px solid #bbf7d0;border-bottom:1px solid #bbf7d0}
+#tab-fire .fire-error{margin:12px 0 0;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:8px;padding:9px 10px;font-size:12px;font-weight:700}
+#tab-fire .fire-result{margin-top:15px;padding:0;background:#fff;border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(15,23,42,.08)}
+#tab-fire .fire-result-top{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:14px;background:linear-gradient(135deg,#7c2d12,#ea580c);color:#fff}
+#tab-fire .fire-result-top span{display:block;text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:.08em;opacity:.82}
+#tab-fire .fire-result-top h3{font-size:22px;margin:3px 0 2px;color:#fff}
+#tab-fire .fire-result-top small{font-size:10px;opacity:.86}
+#tab-fire .fire-result-rate{min-width:73px;border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.12);border-radius:9px;padding:8px;text-align:center;font-weight:900;font-size:14px}
+#tab-fire .fire-result-rate small{display:block;text-transform:uppercase;letter-spacing:.05em;font-size:8px;margin-top:3px}
+#tab-fire .fire-result-note{font-size:10.5px;line-height:1.45;color:#92400e;background:#fffbeb;border-bottom:1px solid #fde68a;padding:9px 12px}
+#tab-fire .fire-result-section{padding:0 12px;border-bottom:1px solid #edf2f7}
+#tab-fire .fire-result-line{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:9px 0;font-size:11px;color:#334155}
+#tab-fire .fire-result-line>span{min-width:0}
+#tab-fire .fire-result-line b{display:block;font-size:11px}
+#tab-fire .fire-result-line small{display:block;font-size:9.5px;color:#94a3b8;line-height:1.35;margin-top:2px}
+#tab-fire .fire-result-line strong{white-space:nowrap;font-size:11px;color:#0f172a}
+#tab-fire .fire-result-line.muted strong{color:#94a3b8}
+#tab-fire .fire-result-subhead{padding:9px 0 1px;color:#c2410c;font-weight:900;font-size:9px;letter-spacing:.07em;text-transform:uppercase}
+#tab-fire .fire-addon-result .fire-result-line{padding:7px 0}
+#tab-fire .fire-result-total{margin:0 -12px;padding:12px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:900;color:#0f172a}
+#tab-fire .fire-result-total strong{font-size:17px;color:#c2410c}
+#tab-fire .fire-result-foot{font-size:9px;line-height:1.45;color:#94a3b8;margin:0;padding:10px 12px;background:#fff}
+#tab-fire .fire-pdf-row{margin-top:11px;justify-content:flex-end}
+#tab-fire .fire-pdf-row .btn-secondary{min-height:38px}
+@media(max-width:600px){#tab-fire .fire-policy-tabs{grid-template-columns:repeat(2,1fr)}#tab-fire .fire-option-grid{grid-template-columns:1fr}#tab-fire .fire-policy-tabs{gap:5px}#tab-fire .fire-policy-tabs button{font-size:10px;padding:8px 4px}#tab-fire .fire-addon{grid-template-columns:minmax(0,1fr) 76px}.fire-source-badge{display:none}}
+</style>
+
+
+<style id="extendedProductSuiteStyles">
+#tab-products .products-suite-card{padding-bottom:18px}
+#tab-products .products-suite-intro{font-size:12px;line-height:1.55;color:var(--text-2);margin:0 0 14px}
+#tab-products .products-suite-tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+#tab-products .products-suite-tabs button{border:1px solid #dbe4f0;background:#fff;color:#475569;border-radius:9px;padding:8px 10px;font-size:11px;font-weight:800;cursor:pointer}
+#tab-products .products-suite-tabs button.active{background:#eef2ff;color:#3730a3;border-color:#a5b4fc;box-shadow:inset 0 0 0 1px #c7d2fe}
+#tab-products .native-grid{max-width:1050px}.native-panel{border:1px solid #dbe4f0;background:#fbfdff;border-radius:14px;padding:17px}.native-panel h3{margin:0 0 5px;color:#0f2f59;font-size:16px}.native-note{font-size:12px;color:#64748b;line-height:1.55;margin:0 0 14px}.native-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:11px 0}.native-panel label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:750;color:#334155}.native-panel input,.native-panel select{width:100%;min-height:38px;border:1px solid #cbd5e1;border-radius:8px;padding:7px 9px;background:#fff;color:#172554;font:inherit;font-size:12px}.native-panel>label{margin:10px 0}.native-checks{display:flex;flex-wrap:wrap;gap:8px 13px;margin:12px 0}.native-panel .native-check{flex-direction:row;align-items:center;font-size:12px;font-weight:650}.native-check input{width:15px;height:15px;min-height:15px;padding:0;accent-color:#3730a3}.native-calc{margin-top:14px}.native-output{margin-top:14px}.native-pdf-row{margin-top:10px;justify-content:flex-end}.native-pdf-row .btn-secondary{min-height:36px}.native-result{border:1px solid #d9e3f2;background:#fff;border-radius:10px;padding:12px;font-size:12px}.native-result>b{display:block;color:#172554;margin-bottom:6px}.native-result>div{display:flex;justify-content:space-between;gap:15px;padding:5px 0;border-bottom:1px solid #edf2f7}.native-result>div span{color:#475569}.native-result>div span small{display:block;font-size:10px;color:#94a3b8;line-height:1.35;margin-top:2px}.native-result>div strong{text-align:right;color:#172554}.native-result .native-grand{border:0;padding-top:10px;font-size:14px}.native-result .native-grand strong{color:#0f766e}.native-warning{margin:10px 0 0;color:#b91c1c;line-height:1.55}.native-cover-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:13px}.native-cover{border:1px solid #e2e8f0;background:#fff;border-radius:9px;padding:9px}.native-cover>label:first-child{display:flex;flex-direction:row;align-items:center;gap:5px;font-size:12px}.native-cover>span{display:block;margin:5px 0;color:#475569;font-size:11px;font-weight:700}.native-cover small{display:block;color:#64748b;font-size:10px;line-height:1.35;margin-top:4px}.native-cover .native-si{margin-top:5px;font-size:10px}.native-subfields{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}.native-subfields label{font-size:10px}
+@media(max-width:700px){#tab-products .native-fields,#tab-products .native-cover-list{grid-template-columns:1fr}.native-subfields{grid-template-columns:1fr}}
+</style>
+
+<style id="motorDiscountLimitStyles">
+#quickUwDiscount.discount-over-limit,#quickDepCapDiscount.discount-over-limit,#uwDiscount.discount-over-limit,#ndDiscount.discount-over-limit{border:2px solid #dc2626!important;background:#fff1f2!important;color:#991b1b!important;box-shadow:0 0 0 3px rgba(220,38,38,.12)}
+</style>
+</head>
+<body>
+
+<!-- Mobile Menu Button -->
+<button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">☰</button>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="app-shell">
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo-circle">OIC</div>
+      <div>
+        <div class="brand-title">ORIENTAL INSURANCE</div>
+        <div class="brand-sub">OICL Premium Calculator · V31.0</div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Products</div>
+      <button class="nav-item active" data-tab="calc">
+        <span class="nav-icon">🚗</span> <span>Motor</span>
+      </button>
+      <button class="nav-item" data-tab="fire" data-op="fire">
+        <span class="nav-icon">🔥</span> <span>Fire &amp; Theft</span>
+      </button>
+      <button class="nav-item" data-tab="pa" data-op="pa">
+        <span class="nav-icon">🧍</span> <span>Personal Accident</span>
+      </button>
+      <button class="nav-item" data-tab="med" data-op="med">
+        <span class="nav-icon">🏥</span> <span>Mediclaim</span>
+      </button>
+      <button class="nav-item" data-tab="products">
+        <span class="nav-icon">🧰</span> <span>WC · CAR · CPM & More</span>
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Workspace</div>
+      <button class="nav-item" data-tab="quote">
+        <span class="nav-icon">📄</span> <span>Quotation</span>
+      </button>
+      <button class="nav-item" data-tab="history">
+        <span class="nav-icon">🕘</span> <span>History</span>
+        <span class="nav-badge" id="historyCount" style="display:none;">0</span>
+      </button>
+      <button class="nav-item" data-tab="about">
+        <span class="nav-icon">ℹ️</span> <span>About</span>
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-card">
+        <strong>Revision Notes</strong>
+        <div class="footer-meta">OICL Premium Calculator V31.0</div>
+        <div class="footer-meta" id="revisionDate" style="margin-top:6px; font-weight:700; color:#fbbf24;"></div>
+        <div class="footer-meta" style="margin-top:10px;">Customized by <strong style="color:#fbbf24;">Mohit Sharma</strong></div>
+        <div class="footer-meta" style="margin-top:6px;">© 2026 Mohit Sharma · All Rights Reserved.</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========== MAIN ========== -->
+  <main class="main">
+
+    <div class="top-bar">
+      <div class="page-title">
+        <span id="pageTitleMain">Motor Premium Calculator</span>
+        <small id="pageTitleSub">Own Damage (OD) &amp; Third Party (TP) Premium Calculator</small>
+      </div>
+      <div class="top-actions">
+        <div class="live-pill">
+          <span class="live-dot"></span>
+          Live · Updated <span id="liveUpdateDate">01-07-2026</span>
+        </div>
+        <button class="pro-top-btn" id="newQuoteBtn" title="Start a fresh quote">📝 New Quote</button>
+        <button class="pro-top-btn" id="themeToggle" title="Toggle dark / light mode" aria-pressed="false">🌙 Dark</button>
+      </div>
+    </div>
+
+    <!-- ============== TAB · CALCULATOR ============== -->
+    <section class="tab-content active" id="tab-calc">
+      <div class="stepper" aria-label="Quote progress">
+        <div class="stepper-row">
+          <div class="step" id="step1"><span class="step-dot"><span>1</span></span><span class="step-label">🚗 Vehicle</span></div>
+          <div class="step-sep"></div>
+          <div class="step" id="step2"><span class="step-dot"><span>2</span></span><span class="step-label">📋 Policy &amp; IDV</span></div>
+          <div class="step-sep"></div>
+          <div class="step" id="step3"><span class="step-dot"><span>3</span></span><span class="step-label">🛡️ Covers</span></div>
+          <div class="step-sep"></div>
+          <div class="step" id="step4"><span class="step-dot"><span>4</span></span><span class="step-label">✅ Quote</span></div>
+        </div>
+        <div class="step-bar"><div class="step-bar-fill" id="stepBarFill"></div></div>
+      </div>
+      <div class="grid motor-calculator-grid">
+
+        <!-- ===== MOTOR · INPUTS ===== -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-icon">🚗</div>
+              Vehicle &amp; Policy Details
+            </div>
+            
+          </div>
+
+
+          <!-- Smart Quick Quote: asks only renewal essentials; full tariff form remains editable below. -->
+          <section class="smart-quote" id="smartQuote" aria-labelledby="smartQuoteTitle">
+            <div class="smart-quote-head">
+              <div>
+                <p class="smart-quote-eyebrow">V31 Smart Renewal Premium</p>
+                <h2 class="smart-quote-title" id="smartQuoteTitle">⚡ Quick Quote — Instant Premium</h2>
+              </div>
+              <div class="smart-quote-state"><span class="pulse"></span> Editable quote</div>
+            </div>
+            <div class="smart-step-strip" aria-label="Quick quote steps">
+              <div class="smart-step"><b>1</b><span>Vehicle basics</span></div>
+              <div class="smart-step"><b>2</b><span>IDV &amp; NCB</span></div>
+              <div class="smart-step"><b>3</b><span>Add-ons &amp; premium</span></div>
+            </div>
+            <div class="smart-quote-body">
+              <div class="smart-grid">
+                <div class="smart-field">
+                  <label for="quickVehicleType">Vehicle type <em>*</em></label>
+                  <select id="quickVehicleType">
+                    <option value="" selected>-- Select vehicle --</option>
+                    <optgroup label="Private vehicle">
+                      <option value="pvtCar">Private Car</option>
+                      <option value="evPvtCar">Electric Private Car</option>
+                      <option value="twoWheeler">Two Wheeler</option>
+                      <option value="evTwoWheeler">Electric Two Wheeler</option>
+                    </optgroup>
+                    <optgroup label="Commercial / Special">
+                      <option value="taxi">Taxi / PCCV (up to 6 seats)</option>
+                      <option value="schoolBus">School Bus</option>
+                      <option value="staffBus">Staff Bus</option>
+                      <option value="pccvSmall">PCCV (6–17 seats)</option>
+                      <option value="pccvMedium">PCCV (17–36 seats)</option>
+                      <option value="pccvLarge">PCCV (above 36 seats)</option>
+                      <option value="ambulance">Ambulance</option>
+                      <option value="miscD">Misc – Domestic</option>
+                      <option value="gccv">Goods Vehicle – GCCV</option>
+                      <option value="gccv3w">GCCV 3-Wheeler</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="smart-field" id="quickFuelWrap">
+                  <label for="quickFuelType">Fuel <em>*</em></label>
+                  <select id="quickFuelType" required aria-describedby="quickFuelHelp">
+                    <option value="" selected disabled>-- Select fuel --</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="CNG">CNG / LPG</option>
+                    <option value="Electric">Electric</option>
+                  </select>
+                  <span class="smart-help" id="quickFuelHelp">Select Petrol, Diesel or CNG / LPG. EV automatically selects and locks Electric.</span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickCapacity" id="quickCapacityLabel">CC / power <em>*</em></label>
+                  <input type="number" id="quickCapacity" min="0" inputmode="numeric" placeholder="e.g. 1197" />
+                  <span class="smart-help" id="quickCapacityHelp">CC for car / 2W</span>
+                </div>
+                <div class="smart-field" id="quickSeatsWrap" style="display:none">
+                  <label for="quickSeats">Seating capacity <em>*</em> <span style="text-transform:none; font-weight:600;">(editable)</span></label>
+                  <input type="number" id="quickSeats" min="1" inputmode="numeric" value="5" />
+                  <span class="smart-help" id="quickSeatsHelp">Auto-filled including driver — edit if the actual vehicle seating is different.</span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickDor">Registration date <em>*</em></label>
+                  <input type="date" id="quickDor" />
+                  <span class="smart-help">Vehicle age auto-calculated</span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickZone">Rating zone <em>*</em></label>
+                  <select id="quickZone">
+                    <option value="A">Zone A — major metros</option>
+                    <option value="B">Zone B — state capital</option>
+                    <option value="C" selected>Zone C — rest of India</option>
+                  </select>
+                  <span class="smart-help">Check city if unsure</span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickState">State <em>*</em></label>
+                  <select id="quickState">
+                    <option value="Punjab" selected>Punjab</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="West Bengal">West Bengal</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Other">Other / edit full form</option>
+                  </select>
+                </div>
+                <div class="smart-field">
+                  <label for="quickInsuredName">Insured name <span style="text-transform:none; font-weight:600;">(optional)</span></label>
+                  <input type="text" id="quickInsuredName" autocomplete="name" placeholder="Enter insured / customer name" />
+                </div>
+                <div class="smart-field">
+                  <label for="quickRegNo">Vehicle no. <span style="text-transform:none; font-weight:600;">(optional)</span></label>
+                  <input type="text" id="quickRegNo" autocomplete="off" placeholder="e.g. PB-10-AB-1234" style="text-transform:uppercase;" />
+                </div>
+                <div class="smart-field">
+                  <label for="quickPolicy">Policy <em>*</em></label>
+                  <select id="quickPolicy">
+                    <option value="package" selected>Package renewal (OD + TP)</option>
+                    <option value="saod">OD only (SAOD)</option>
+                    <option value="liability">TP only</option>
+                    <option value="bundle">New vehicle bundle</option>
+                  </select>
+                  <span class="smart-help" id="quickPolicyHelp">Registration date select karte hi eligible policy auto-select hogi; aap baad mein manually change kar sakte ho.</span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickLastIdv" id="quickIdvBaseLabel">Last policy IDV (₹) <em>*</em></label>
+                  <input type="number" id="quickLastIdv" min="0" inputmode="numeric" placeholder="e.g. 650000" />
+                  <span class="smart-help" id="quickIdvBaseHelp">Previous policy schedule par jo IDV tha</span>
+                </div>
+                <div class="smart-field" id="quickPrevPolicyEndWrap">
+                  <label for="quickPrevPolicyEnd">Last policy date <em>*</em></label>
+                  <input type="date" id="quickPrevPolicyEnd" />
+                  <span class="smart-help">Is date se first renewal / later renewal rule auto-select hoga</span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickIdv">Suggested current IDV (₹) <em>*</em></label>
+                  <input type="number" id="quickIdv" min="0" inputmode="numeric" placeholder="Auto calculated" />
+                  <span class="smart-help" id="quickIdvNote">New vehicle: invoice par 5% less · first renewal: last IDV par 15% less · later renewal: last IDV par 10% less.</span>
+                </div>
+                <!-- Internal invoice fallback is retained for calculation only; the ex-showroom figure is not shown in Smart Quote. -->
+                <div class="smart-field" id="quickInvoiceWrap" style="display:none" aria-hidden="true">
+                  <input type="hidden" id="quickInvoice" readonly aria-readonly="true" />
+                  <span class="smart-help" id="quickInvoiceNote"></span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickPrevNcb">Last policy NCB % <em>*</em></label>
+                  <select id="quickPrevNcb">
+                    <option value="newVehicle">New Vehicle / First Policy</option>
+                    <option value="0" selected>0%</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                    <option value="35">35%</option>
+                    <option value="45">45%</option>
+                    <option value="50">50%</option>
+                  </select>
+                  <span class="smart-help">Last policy schedule ka earned NCB</span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickClaims">Last policy mein claim?</label>
+                  <select id="quickClaims">
+                    <option value="no" selected>No claim</option>
+                    <option value="yes">Yes — claim taken</option>
+                  </select>
+                  <span class="smart-help">Claim par renewal NCB 0% hota hai</span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickNcb">NCB for this quote <em>*</em></label>
+                  <select id="quickNcb">
+                    <option value="0" selected>0% — no NCB</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                    <option value="35">35%</option>
+                    <option value="45">45%</option>
+                    <option value="50">50%</option>
+                  </select>
+                  <span class="smart-help" id="quickNcbNote">No claim + continuous policy par next NCB slab auto-select hoga. Zarurat par editable hai.</span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickUwDiscount">U/W Discount % <span style="text-transform:none; font-weight:600;">(auto maximum)</span></label>
+                  <input type="number" id="quickUwDiscount" min="0" max="95" step="0.01" inputmode="decimal" placeholder="Auto maximum discount" />
+                  <span class="smart-help" id="quickUwNote">Vehicle details ke basis par maximum U/W discount auto-fill hoga. Isse zyada amount red warning ke saath apply hoga.</span>
+                </div>
+                <div class="smart-field">
+                  <label for="quickDepCapDiscount">Dep Cap / NIL Dep Discount % <span style="text-transform:none; font-weight:600;">(optional)</span></label>
+                  <input type="number" id="quickDepCapDiscount" min="0" max="95" step="0.01" inputmode="decimal" placeholder="0" />
+                  <span class="smart-help" id="quickDepCapNote">NIL Dep / Dep Cap cover select hone par hi apply hoga.</span>
+                </div>
+                <div class="smart-addon-box">
+                  <div class="smart-addon-title"><span>🛡️ Add-ons</span><small id="quickAddonHint">Vehicle age/type ke hisaab se eligible covers auto-select honge</small></div>
+                  <div class="smart-addon-list" id="quickAddons">
+                    <label class="smart-addon"><input type="checkbox" data-cover="nilDep" /> NIL Dep</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="engineProt" /> Engine Protect</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="consumables" /> Consumables</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="keyRepl" /> Key Replacement</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="rti" /> RTI</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="tyreRim" /> Tyre &amp; Rim</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="towing" /> Towing</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="rsa" /> Roadside Assistance (RSA) — flat premium</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="batteryProt" /> Battery Protect (EV 2W)</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="llPaid" /> LL Paid Driver</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="passPa" /> PA Cover — Un-named Passengers</label>
+                    <label class="smart-addon"><input type="checkbox" data-cover="odPa" checked /> Owner-driver PA</label>
+                  </div>
+                  <div class="quick-passpa-options" id="quickPassPaSIWrap" style="display:none">
+                    <label for="quickPassPaSI">PA Un-named Passenger SI <span>(per passenger)</span></label>
+                    <select id="quickPassPaSI">
+                      <option value="100000">₹ 1,00,000</option>
+                      <option value="200000">₹ 2,00,000</option>
+                    </select>
+                    <small>Passenger count = Seating Capacity minus driver. Premium is calculated on the selected SI and policy term.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="smart-quick-actions">
+                <button type="button" class="smart-calc-btn" id="quickCalcBtn">✨ Generate Premium</button>
+                <button type="button" class="smart-edit-btn" id="openAdvancedBtn">⚙ Edit all details</button>
+                <span class="smart-auto-note">Policy start date: <strong id="quickPolicyDateLabel">today</strong> · GST: <strong>18%</strong> · U/W &amp; NIL Dep discount: <strong>auto-filled</strong></span>
+              </div>
+              <div class="quick-result-actions" id="quickResultActions" hidden aria-live="polite">
+                <div class="quick-premium-summary">
+                  <div class="quick-commission-card">
+                    <span class="quick-commission-label">Agent Commission</span>
+                    <strong class="quick-commission-value" id="commission">₹ 0</strong>
+                    <small id="commissionDetail">—</small>
+                  </div>
+                  <div class="quick-metric-card quick-metric-total">
+                    <span class="quick-metric-label">Total Premium</span>
+                    <strong class="quick-metric-value" id="quickTotalPremium">₹ 0</strong>
+                    <small>Before GST</small>
+                  </div>
+                  <div class="quick-metric-card quick-metric-gst">
+                    <span class="quick-metric-label">GST</span>
+                    <strong class="quick-metric-value" id="quickGstAmount">₹ 0</strong>
+                    <small>Applicable tax</small>
+                  </div>
+                  <div class="quick-metric-card quick-metric-net">
+                    <span class="quick-metric-label">Net Payable Premium</span>
+                    <strong class="quick-metric-value" id="quickNetPremium">₹ 0</strong>
+                    <small>Including GST</small>
+                  </div>
+                </div>
+                <div class="quick-export-actions" aria-label="Quotation output actions">
+                  <button type="button" class="quick-output-btn quick-share-btn" id="quickShareQuote">📤 Share</button>
+                  <button type="button" class="quick-output-btn quick-pdf-btn" id="quickDownloadPdf">⬇️ Download PDF</button>
+                  <button type="button" class="quick-output-btn quick-excel-btn" id="quickDownloadExcel">📊 Download Excel</button>
+                </div>
+              </div>
+              <div class="smart-status" id="quickStatus" role="status" aria-live="polite"></div>
+            </div>
+          </section>
+
+          <div class="advanced-fields" id="advancedFields">
+            <div class="advanced-panel-note"><span><strong>Advanced editable details</strong> — yahan aap zone, discount, accessories, PA / LL, add-on options aur customer information ko edit karke premium re-calculate kar sakte ho.</span><button type="button" id="closeAdvancedBtn">Hide detailed form</button></div>
+
+          <!-- Section 1: Vehicle -->
+          <div class="form-section">
+            <div class="form-section-title">Vehicle Information</div>
+            <div class="section-grid">
+
+              <div class="field">
+                <label>Vehicle Type</label>
+                <select id="vehicleType">
+                  <option value="" selected disabled>-- Select --</option>
+                  <optgroup label="Private Car">
+                    <option value="pvtCar">Private Car (Petrol / Diesel)</option>
+                    <option value="evPvtCar">Electric Pvt Car</option>
+                  </optgroup>
+                  <optgroup label="Two Wheeler">
+                    <option value="twoWheeler">Two Wheeler (2W)</option>
+                    <option value="evTwoWheeler">Electric 2-Wheeler</option>
+                  </optgroup>
+                  <optgroup label="Taxi">
+                    <option value="taxi">Taxi / PCCV (&#8804;6 seats)</option>
+                  </optgroup>
+                  <optgroup label="Bus / PCCV">
+                    <option value="schoolBus">School Bus</option>
+                    <option value="staffBus">Staff Bus</option>
+                    <option value="pccvSmall">PCCV (6&ndash;17 seats)</option>
+                    <option value="pccvMedium">PCCV (17&ndash;36 seats)</option>
+                    <option value="pccvLarge">PCCV (Above 36 seats)</option>
+                  </optgroup>
+                  <optgroup label="Class D">
+                    <option value="ambulance">Ambulance</option>
+                    <option value="miscD">Misc &ndash; Domestic (MISC D)</option>
+                  </optgroup>
+                  <optgroup label="Goods Vehicle">
+                    <option value="gccv">Goods Vehicle &ndash; GCCV (by GVW)</option>
+                    <option value="gccv3w">GCCV 3-Wheeler (Goods Carrier)</option>
+                  </optgroup>
+                  <optgroup label="3-Wheeler">
+                    <option value="auto" disabled>Auto Rickshaw (3W)</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Fuel Type</label>
+                <select id="fuelType">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="Petrol">Petrol</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="CNG">CNG / LPG</option>
+                  <option value="Electric">Electric</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label id="ccLabel">Cubic Capacity (CC)</label>
+                <input type="number" id="cc" value="" min="0" placeholder="Enter CC" />
+                <span id="ccHint" style="font-size:10px;color:var(--text-3);margin-top:2px;">Enter CC for cars / 2W, Seats for buses, GVW (kg) for goods vehicles</span>
+              </div>
+
+              <div class="field">
+                <label>Seating Capacity (incl. driver)</label>
+                <input type="number" id="seating" value="" min="0" placeholder="Enter seating capacity" />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 2: Policy -->
+          <div class="form-section">
+            <div class="form-section-title">Policy Type &amp; Term</div>
+            <div class="section-grid">
+
+              <div class="field">
+                <label>Policy Type</label>
+                <select id="policyType">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="package">Package Policy</option>
+                  <option value="bundle">Bundle Policy (3yr Car / 5yr 2W)</option>
+                  <option value="saod">Standard OD (SAOD)</option>
+                  <option value="liability">Liability Only (TP)</option>
+                </select>
+              </div>
+
+              <div class="field" id="policyTermField" style="display:none;">
+                <label>Policy Term (Optional)</label>
+                <select id="policyTerm">
+                  <option value="" selected>-- Auto (Optional) --</option>
+                  <option value="1">1 Year</option>
+                  <option value="3">3 Year</option>
+                  <option value="5">5 Year (2W only)</option>
+                </select>
+              </div>
+
+              <div class="field date-field-wrap">
+                <label>Date of Registration <span style="color:#b45309">DD-MM-YYYY</span></label>
+                <input type="text" id="dor" class="date-input" value="" placeholder="DD-MM-YYYY" maxlength="10" inputmode="numeric" autocomplete="off" />
+                <span class="date-icon">📅</span>
+                <span class="date-hint">Format: <b>DD-MM-YYYY</b> &nbsp; Ex: 03-06-2022</span>
+              </div>
+
+              <div class="field date-field-wrap">
+                <label>Policy Start Date <span style="color:#b45309">DD-MM-YYYY</span></label>
+                <input type="text" id="policyDate" class="date-input" value="" placeholder="DD-MM-YYYY" maxlength="10" inputmode="numeric" autocomplete="off" />
+                <span class="date-icon">📅</span>
+                <span class="date-hint">Format: <b>DD-MM-YYYY</b> &nbsp; Ex: 01-07-2026 &nbsp; <a href="#" id="todayBtn" style="color:#2563eb;font-weight:700;text-decoration:none;">Today →</a></span>
+              </div>
+
+              <div class="field">
+                <label>Zone (A: Metro cities, B: Other state capitals, C: Rest of India)</label>
+                <select id="zone">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="A">Zone A — Mumbai, Delhi, Chennai, Kolkata, Bangalore, Hyderabad, Ahmedabad, Pune</option>
+                  <option value="B">Zone B — Rest of State Capitals</option>
+                  <option value="C">Zone C — Rest of India</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>State (for Commission calculation)</label>
+                <select id="state">
+                  <option value="" selected>-- Select State --</option>
+                  <option value="Andhra Pradesh">Andhra Pradesh</option>
+                  <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                  <option value="Assam">Assam</option>
+                  <option value="Bihar">Bihar</option>
+                  <option value="Chhattisgarh">Chhattisgarh</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Goa">Goa</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Haryana">Haryana</option>
+                  <option value="Himachal Pradesh">Himachal Pradesh</option>
+                  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                  <option value="Jharkhand">Jharkhand</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Kerala">Kerala</option>
+                  <option value="Ladakh">Ladakh</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Manipur">Manipur</option>
+                  <option value="Meghalaya">Meghalaya</option>
+                  <option value="Mizoram">Mizoram</option>
+                  <option value="Nagaland">Nagaland</option>
+                  <option value="Odisha">Odisha</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Sikkim">Sikkim</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Telangana">Telangana</option>
+                  <option value="Tripura">Tripura</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Uttarakhand">Uttarakhand</option>
+                  <option value="West Bengal">West Bengal</option>
+                </select>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 3: Valuation -->
+          <div class="form-section">
+            <div class="form-section-title">Valuation</div>
+            <div class="section-grid">
+
+              <div class="field">
+                <label>Invoice Price (₹)</label>
+                <input type="number" id="invoice" value="" min="0" placeholder="Enter Invoice Price" />
+              </div>
+
+              <div class="field">
+                <label>IDV of Vehicle (₹)</label>
+                <input type="number" id="idv" value="" min="0" placeholder="Enter IDV" />
+                <button type="button" class="mini-btn" id="autoIdv">AUTO</button>
+              </div>
+
+              <div class="field">
+                <label>IDV of Non-Elec. Accessories (₹)</label>
+                <input type="number" id="idvNonElec" value="0" min="0" />
+              </div>
+
+              <div class="field">
+                <label>IDV of Elec. Accessories (₹)</label>
+                <input type="number" id="idvElec" value="0" min="0" />
+              </div>
+
+              <div class="field">
+                <label>GST Rate (%)</label>
+                <input type="number" id="gst" value="18" min="0" max="28" />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 3B: Insured / Customer Details -->
+          <div class="form-section">
+            <div class="form-section-title">Insured / Customer Details</div>
+            <div class="section-grid">
+              <div class="field">
+                <label>Insured Name</label>
+                <input type="text" id="insuredName" value="" placeholder="Enter insured / customer name" />
+              </div>
+              <div class="field">
+                <label>Vehicle Reg. No. <span style="color:#b45309; text-transform:none;">(e.g. PB-10-AB-1234)</span></label>
+                <input type="text" id="regNo" value="" placeholder="Enter vehicle registration number" style="text-transform:uppercase;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Discounts -->
+          <div class="form-section">
+            <div class="form-section-title">Discounts</div>
+            <div class="section-grid">
+
+              <div class="field">
+                <label>NCB % (No Claim Bonus)</label>
+              <select id="ncb">
+                <option value="" selected disabled>-- Select --</option>
+                <option value="0">0 %</option>
+                <option value="20">20 %</option>
+                <option value="25">25 %</option>
+                <option value="35">35 %</option>
+                <option value="45">45 %</option>
+                <option value="50">50 %</option>
+              </select>
+              </div>
+
+              <div class="field">
+                <label>U/W Discount % <span style="text-transform:none; font-weight:600;">(auto maximum)</span></label>
+                <input type="number" id="uwDiscount" value="" min="0" max="95" placeholder="Auto maximum U/W Discount %" />
+              </div>
+
+              <div class="field">
+                <label>Anti-Theft Discount?</label>
+                <select id="antiTheft">
+                  <option value="No" selected>No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label id="ndDiscountLabel">NIL Dep. / Dep Cap Discount %</label>
+                <input type="number" id="ndDiscount" value="" min="0" max="40" placeholder="Enter NIL Dep / Dep Cap Discount %" />
+              </div>
+
+              <div class="field">
+                <label>NIL Dep. Renewal Disc. %</label>
+                <input type="number" id="ndRenDiscount" value="0" min="0" max="5" />
+              </div>
+
+              <div class="field">
+                <label>Add-on Discount %</label>
+                <input type="number" id="addOnDiscount" value="0" min="0" max="0" disabled />
+              </div>
+
+            </div>
+          </div>
+
+
+          <!-- Section 5: OD Add-ons -->
+          <div class="form-section" id="odAddonsSection">
+            <div class="form-section-title">OD Add-on Covers</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="nilDep" /> <span id="nilDepText">NIL Depreciation Cover</span></label>
+              <label class="cb-row"><input type="checkbox" id="engineProt" /> <span>Engine Protection Cover</span></label>
+              <label class="cb-row"><input type="checkbox" id="consumables" /> <span>Consumables Cover</span></label>
+              <label class="cb-row"><input type="checkbox" id="keyRepl" /> <span>Key Replacement Cover</span></label>
+              <label class="cb-row"><input type="checkbox" id="rti" /> <span>Return to Invoice Cover</span></label>
+              <label class="cb-row"><input type="checkbox" id="tyreRim" /> <span>Tyre &amp; Rim Protection</span></label>
+              <label class="cb-row"><input type="checkbox" id="altCar" /> <span>Alternative Car Benefit</span></label>
+              <label class="cb-row"><input type="checkbox" id="batteryProt" /> <span>Battery Protection</span></label>
+              <div class="field" id="bpCoPayField" style="display:none; grid-column: 1 / -1; margin-top:-6px; padding-left:8px; border-left:3px solid #0d9488; background:#f0fdfa; border-radius:6px;">
+                <label style="font-size:10px; font-weight:700; color:#0f766e;">Battery Protect Option (EV 2-Wheeler only)</label>
+                <select id="bpCoPay" style="padding:7px 10px; font-size:13px; width:100%; max-width:260px;">
+                  <option value="standard">Without Co-Pay (Standard)</option>
+                  <option value="coPay">With Co-Pay</option>
+                </select>
+                <div style="font-size:9.5px;color:#0f766e; margin-top:2px; line-height:1.3;">
+                  % of IDV (0–1 → 4–5 yr) — Without Co-Pay: <strong>0.15/0.17/0.20/0.23/0.28</strong> · With Co-Pay: <strong>0.15/0.15/0.16/0.16/0.16</strong><br>
+                  EV/HEV 2W only · Age ≤ 5 yrs · Max 2 claims · No NCB on this add-on
+                </div>
+              </div>
+              <label class="cb-row"><input type="checkbox" id="emiProt" /> <span>EMI Protection</span></label>
+              <label class="cb-row"><input type="checkbox" id="persBelong" /> <span>Loss of Personal Belongings</span></label>
+              <div class="field" id="persBelongSIField" style="display:none; grid-column: 1 / -1; margin-top:-6px; padding-left:8px; border-left:3px solid #4f46e5; background:#f0fdf4; border-radius:6px;">
+                <label style="font-size:10px; font-weight:700; color:#1e40af;">Sum Insured</label>
+                <select id="persBelongSI" style="padding:7px 10px; font-size:13px; width:100%; max-width:220px;">
+                  <option value="5000">₹ 5,000 (Premium: ₹400)</option>
+                  <option value="10000">₹ 10,000 (Premium: ₹650)</option>
+                </select>
+              </div>
+              <label class="cb-row"><input type="checkbox" id="elecAcc" /> <span>Electrical Accessories</span></label>
+              <label class="cb-row"><input type="checkbox" id="cngKit" /> <span>CNG / LPG Kit Cover (OD + TP)</span></label>
+              <label class="cb-row"><input type="checkbox" id="towing" /> <span>Additional Towing Charges</span></label>
+              <div class="field" id="towingLimitField" style="display:none; grid-column: 1 / -1; margin-top:-6px; padding-left:8px; border-left:3px solid #f59e0b; background:#fffbeb; border-radius:6px;">
+                <label style="font-size:10px; font-weight:700; color:#854d0e;">Towing SI (GCCV only)</label>
+                <select id="towingLimit" style="padding:7px 10px; font-size:13px; width:100%; max-width:220px;">
+                  <option value="10000">₹ 10,000</option>
+                  <option value="20000">₹ 20,000</option>
+                </select>
+                <div style="font-size:9.5px;color:#854d0e; margin-top:2px; line-height:1.1;">
+                  ₹ 10,000 → <strong>5%</strong> &nbsp;&nbsp; | &nbsp;&nbsp; ₹ 20,000 → <strong>7.5%</strong>
+                </div>
+              </div>
+              <label class="cb-row"><input type="checkbox" id="geoExtOD" /> <span>Geographical Extension (OD) ₹400</span></label>
+              <label class="cb-row"><input type="checkbox" id="geoExtTP" /> <span>Geographical Extension (TP) ₹100</span></label>
+              <label class="cb-row"><input type="checkbox" id="overturning" /> <span>Overturning Cover</span></label>
+            </div>
+          </div>
+
+          <!-- RSA can apply to OD or TP-only policies, so it is kept outside both sections. -->
+          <div class="form-section" id="rsaSection">
+            <div class="form-section-title">Roadside Assistance</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="rsa" /> <span>Roadside Assistance (RSA) — flat premium as per vehicle / policy term</span></label>
+            </div>
+            <div id="rsaRateHint" style="font-size:10px;color:#0369a1;margin-top:8px;padding:8px 10px;border-left:3px solid #38bdf8;background:#f0f9ff;border-radius:6px;line-height:1.35;">RSA rate will be selected automatically from the vehicle class and policy term.</div>
+          </div>
+
+          <!-- Section 6: TP Covers -->
+          <div class="form-section" id="tpSection">
+            <div class="form-section-title">TP Covers &amp; Legal Liability</div>
+            <div class="section-grid">
+
+              <div class="field">
+                <label>No. of LL to Employees</label>
+                <input type="number" id="llCount" value="0" min="0" />
+              </div>
+
+              <div class="field">
+                <label>No. of LL to NFPP / Paid Driver</label>
+                <input type="number" id="llPaid" value="0" min="0" />
+              </div>
+
+            </div>
+
+            <div class="checkbox-grid" style="margin-top:12px">
+              <label class="cb-row"><input type="checkbox" id="odPa" /> <span>Owner-Driver PA Cover (CPA)</span></label>
+              <div class="field" id="cpaTermField" style="display:none; grid-column: 1 / -1; margin-top:-6px; padding:10px 12px; border-left:3px solid #0ea5e9; background:#f0f9ff; border-radius:6px;">
+                <label style="font-size:10px; font-weight:700; color:#0369a1;">CPA Term (Bundle Policy)</label>
+                <select id="cpaTerm" style="padding:7px 10px; font-size:13px; width:100%; max-width:280px;">
+                  <option value="1">1 Year</option>
+                  <option value="full">Full Term</option>
+                </select>
+                <div id="cpaTermHint" style="font-size:9.5px;color:#0369a1; margin-top:3px; line-height:1.3;">
+                  Bundle: choose 1-Year CPA or full-term CPA (3yr Car / 5yr 2W)
+                </div>
+              </div>
+              <label class="cb-row"><input type="checkbox" id="passPa" /> <span>PA Cover – Un-named Passengers</span></label>
+              <div class="field" id="passPaSIField" style="display:none; grid-column: 1 / -1; margin-top:-6px; padding-left:8px; border-left:3px solid #0ea5e9; background:#f0f9ff; border-radius:6px;">
+                <label style="font-size:10px; font-weight:700; color:#0369a1;">Sum Insured per Passenger</label>
+                <select id="passPaSI" style="padding:7px 10px; font-size:13px; width:100%; max-width:220px;">
+                  <option value="100000">₹ 1,00,000 (Premium: ₹50/passenger/yr)</option>
+                  <option value="200000">₹ 2,00,000 (Premium: ₹100/passenger/yr)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button class="btn-primary" id="calcBtn">⚡ Recalculate after editing</button>
+            <button class="btn-secondary" id="resetBtn">↺ Reset</button>
+          </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </section>
+
+    <!-- ============== TAB · RATE CARD ============== -->
+    <section class="tab-content" id="tab-quote">
+      <div class="quote-toolbar no-print">
+        <button class="btn-secondary" id="quoteBack">← Back to Calculator</button>
+        <button class="btn-secondary" id="shareQuote">📤 Share</button>
+        <button class="btn-primary" id="printQuote">⬇️ Download PDF (1-Page)</button>
+      </div>
+
+      <div id="quoteDoc" class="quote-doc">
+        <div class="doc-watermark" aria-hidden="true"></div>
+        <div class="quote-head">
+          <div>
+            <div class="logo-circle">OIC</div>
+            <div class="brand-title">ORIENTAL INSURANCE COMPANY LTD</div>
+            
+          </div>
+          <div class="quote-no">
+            <div class="quote-no-label">Quotation</div>
+            <div id="quoteNumber" class="quote-num">0001</div>
+            <div style="font-size:10px;color:#64748b;margin-top:4px;">Date: <b id="qDateTop" style="color:#0a2540;">01-07-2026</b></div>
+          </div>
+        </div>
+
+        <div class="quote-summary">
+          <div class="qs-title">Premium Summary</div>
+          <div class="qs-grid">
+            <div class="qs-item"><span>Own Damage (OD)</span><b id="qOdTotal2">₹ 0</b></div>
+            <div class="qs-item"><span>Third Party (TP)</span><b id="qTpTotal2">₹ 0</b></div>
+            <div class="qs-item"><span>GST @ <span id="qGstPct2">18</span>%</span><b id="qGst2">₹ 0</b></div>
+            <div class="qs-item qs-grand"><span>Net Premium Payable</span><b id="qNet2">₹ 0</b></div>
+          </div>
+        </div>
+
+        <div class="quote-meta">
+          <div><strong>Insured Name</strong> <span id="qInsuredName">—</span></div>
+          <div><strong>Reg. No.</strong> <span id="qRegNo">—</span></div>
+          <div><strong>Quotation Date</strong> <span id="qDate">01-07-2026</span></div>
+          <div><strong>Vehicle</strong> <span id="qVehicle">Pvt Car</span></div>
+          <div><strong>CC / GVW</strong> <span id="qCc">1197</span></div>
+          <div><strong>Sum Insured (IDV)</strong> <span id="qSumInsured" style="color:#047857;font-weight:700;">—</span></div>
+          <div><strong>Fuel</strong> <span id="qFuel">Petrol</span></div>
+          <div><strong>Policy Type</strong> <span id="qPolicy">Long Term - Bundled</span></div>
+          <div><strong>Reg. Date</strong> <span id="qDor">03-06-2022</span></div>
+          <div><strong>Policy Start</strong> <span id="qPolicyStart" style="color:#047857;font-weight:700;">01-07-2026</span></div>
+          <div><strong>Policy End</strong> <span id="qPolicyEnd" style="color:#b45309;font-weight:700;">30-06-2027</span></div>
+          <div id="qOdPeriodWrap" style="display:none;"><strong>OD Period</strong> <span id="qOdPeriod" style="color:#0369a1;font-weight:700;">—</span></div>
+          <div id="qTpPeriodWrap" style="display:none;"><strong>TP Period</strong> <span id="qTpPeriod" style="color:#b45309;font-weight:700;">—</span></div>
+          <div><strong>State</strong> <span id="qState">—</span></div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:11px;">
+          <span id="qPeriodLabel" style="background:#fff7ed;padding:5px 10px;border-radius:8px;border:1px solid #fde68a;color:#92400e;font-weight:600;">Period: —</span>
+          <span id="qAgeLabel" style="background:#eff6ff;padding:5px 10px;border-radius:8px;border:1px solid #bfdbfe;color:#1e40af;font-weight:600;">Vehicle Age: —</span>
+        </div>
+
+        <h3 class="card-title" style="font-size:14px;margin-bottom:8px;" id="qOdHead">Own Damage Premium</h3>
+        <table class="breakdown-table" id="qOdTable">
+          <thead><tr><th>Cover</th><th>Detail</th><th class="right">Premium</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <h3 class="card-title" style="font-size:14px;margin:20px 0 8px;" id="qTpHead">Liability Premium (TP + PA)</h3>
+        <table class="breakdown-table" id="qTpTable">
+          <thead><tr><th>Cover</th><th>Quantity</th><th>Rate</th><th class="right">Premium</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <table class="final-table">
+          <tbody>
+            <tr id="qRowOdTotal"><td>Own Damage Premium (A)</td><td class="right num" id="qOdTotal">₹ 0</td></tr>
+            <tr id="qRowTpTotal"><td>Liability Premium (B)</td><td class="right num" id="qTpTotal">₹ 0</td></tr>
+            <tr class="bold"><td>Total Premium before GST</td><td class="right num" id="qTotal">₹ 0</td></tr>
+            <tr id="qGstRow"><td>GST @ <span id="qGstPct">18</span>%</td><td class="right num" id="qGst">₹ 0</td></tr>
+            <tr id="qGstSplitOd" style="display:none;"><td style="padding-left:24px; font-size:11px; color:#64748b;">↳ OD GST @ 18%</td><td class="right num" style="font-size:11px; color:#64748b;" id="qGstOdAmt">₹ 0</td></tr>
+            <tr id="qGstSplitTp" style="display:none;"><td style="padding-left:24px; font-size:11px; color:#047857; font-weight:600;">↳ TP GST @ 5%</td><td class="right num" style="font-size:11px; color:#047857; font-weight:600;" id="qGstTpAmt">₹ 0</td></tr>
+            <tr id="qGstSplitTpAddons" style="display:none;"><td style="padding-left:24px; font-size:11px; color:#64748b;">↳ TP Add-ons GST @ 18%</td><td class="right num" style="font-size:11px; color:#64748b;" id="qGstTpAddonsAmt">₹ 0</td></tr>
+            <tr class="grand"><td>Net Premium Payable</td><td class="right num" id="qNet">₹ 0</td></tr>
+          </tbody>
+        </table>
+
+        <div class="quote-foot">
+          <div class="sig-block">
+            <div>Signature</div>
+            <div class="sig-line"></div>
+          </div>
+          <div class="sig-block">
+            <div>Name of Agent / Agency Code</div>
+            <div class="sig-line"></div>
+          </div>
+          <div class="sig-block">
+            <div>Branch / Divisional Manager</div>
+            <div class="sig-line"></div>
+          </div>
+        </div>
+
+        <div class="disclaimer">
+          Disclaimer: Premiums computed are indicative and based on publicly notified IRDAI rates &amp;
+          standard Oriental Insurance add-on loading factors. Final premium is subject to underwriting,
+          inspection &amp; GST rules in force on the date of policy issuance.<br>
+          <strong>NCB is applicable only if no claim was reported in the previous policy year.</strong><br>
+          <strong>Generated: <span id="qGeneratedAt">01-07-2026</span> · Customized by Mohit Sharma · © 2026 Mohit Sharma. All Rights Reserved.</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== TAB · HISTORY ============== -->
+    <section class="tab-content" id="tab-history">
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon">🕘</div>
+            Saved Quotes &amp; History
+          </div>
+          <span class="kbd-hint"><kbd>Alt</kbd>+<kbd>H</kbd> history · <kbd>Alt</kbd>+<kbd>C</kbd> calculator · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> calculate</span>
+        </div>
+        <div class="h-stats">
+          <div class="h-stat"><div class="h-stat-label">Total Quotes</div><div class="h-stat-value" id="hStatTotal">0</div></div>
+          <div class="h-stat"><div class="h-stat-label">This Month</div><div class="h-stat-value" id="hStatMonth">0</div></div>
+          <div class="h-stat"><div class="h-stat-label">Total Premium</div><div class="h-stat-value" id="hStatPremium">₹0</div></div>
+          <div class="h-stat"><div class="h-stat-label">Avg. Premium</div><div class="h-stat-value" id="hStatAvg">₹0</div></div>
+        </div>
+        <div class="history-toolbar">
+          <div class="h-search"><input type="text" id="hSearch" placeholder="Search reg. no, name, vehicle, product, quote no, premium…" autocomplete="off" /></div>
+          <select class="h-filter" id="hFilterProduct" title="Show one product's quotes only"></select>
+          <select class="h-filter" id="hFilterPolicy">
+            <option value="all">All policies</option>
+            <option value="package">Package Policy</option>
+            <option value="bundle">Bundle Policy</option>
+            <option value="saod">Standard OD</option>
+            <option value="liability">Liability Only</option>
+          </select>
+          <select class="h-filter" id="hFilterVehicle">
+            <option value="all">All vehicles</option>
+            <option value="privateCar">Private Car</option>
+            <option value="twoWheeler">Two Wheeler</option>
+            <option value="taxi">Taxi</option>
+            <option value="pccv">PCCV / Bus</option>
+            <option value="classD">Class D</option>
+            <option value="gccv">GCCV</option>
+            <option value="gccv3w">GCCV 3W</option>
+          </select>
+          <select class="h-filter" id="hFilterPeriod">
+            <option value="all">All time</option>
+            <option value="today">Today</option>
+            <option value="week">Last 7 days</option>
+            <option value="month">This month</option>
+          </select>
+          <select class="h-filter" id="hSort">
+            <option value="new">Newest first</option>
+            <option value="old">Oldest first</option>
+            <option value="high">Premium: high → low</option>
+            <option value="low">Premium: low → high</option>
+          </select>
+        </div>
+        <div class="h-list-head">
+          <span class="h-result-count" id="hResultCount"></span>
+          <div class="h-bulk">
+            <span class="h-storage" id="hStorage"></span>
+            <button class="h-mini-btn" id="hSaveCurrent" title="Save the current calculation">💾 Save current</button>
+            <button class="h-mini-btn" id="hExportCsv">⬇️ CSV</button>
+            <button class="h-mini-btn" id="hExportJson">⬇️ JSON</button>
+            <button class="h-mini-btn danger" id="hClearAll">🧹 Clear all</button>
+          </div>
+        </div>
+      </div>
+      <div class="history-grid" id="historyList"></div>
+      <p style="font-size:11px;color:var(--text-3);margin-top:14px;">🔒 History is stored privately in this browser (localStorage) — nothing is uploaded. Export CSV regularly as backup.</p>
+    </section>
+
+    <!-- ============== TAB · EXTENDED PRODUCTS (NATIVE) ============== -->
+    <section class="tab-content" id="tab-products">
+      <div class="card products-suite-card">
+        <div class="card-header"><div class="card-title"><div class="card-title-icon">🧰</div> Extended Product Rating</div></div>
+        <p class="products-suite-intro">These are native V31 rating screens. The supplied public reference was used only to extract the applicable rate schedules and rating logic; its calculator, layout and code are not embedded or launched here.</p>
+        <div id="nativeProductTabs" class="products-suite-tabs" role="group" aria-label="Extended product modules">
+          <button type="button" data-native-product="wc" class="active" aria-pressed="true">👷 WC</button>
+          <button type="button" data-native-product="car" aria-pressed="false">🏗️ CAR / EAR</button>
+          <button type="button" data-native-product="cpm" aria-pressed="false">🚜 CPM</button>
+          <button type="button" data-native-product="paps" aria-pressed="false">🧍 PA Parivaar</button>
+          <button type="button" data-native-product="shop" aria-pressed="false">🏪 Shop</button>
+          <button type="button" data-native-product="office" aria-pressed="false">🏢 Office</button>
+          <button type="button" data-native-product="health" aria-pressed="false">🏥 Health</button>
+        </div>
+        <div id="nativeProductHost"></div>
+        <p class="op-note">All quotations are indicative and remain subject to prevailing OICL circulars, proposal requirements and underwriting approval.</p>
+      </div>
+    </section>
+
+    <!-- ============== TAB · FIRE & THEFT ============== -->
+    <section class="tab-content" id="tab-fire">
+      <div class="op-tabs" aria-label="Fire products">
+        <button class="op-tab active" data-op="fire" type="button">🔥 Fire</button>
+        <button class="op-tab" data-op="theft" type="button">🔐 Theft / Burglary</button>
+      </div>
+
+      <div class="op-pane active" id="op-fire">
+        <div class="card fire-quote">
+          <div class="card-header">
+            <div class="card-title"><div class="card-title-icon">🔥</div> Fire Premium Calculator</div>
+            <span class="fire-source-badge">Schedule-led</span>
+          </div>
+          <p class="fire-intro">Full Fire rating flow with the extracted Sookshma, Laghu, SFSP / IAR occupancy schedules, STFI, EQ, terrorism, discount controls and revised add-on schedules.</p>
+
+          <div class="form-section">
+            <div class="form-section-title">1. Product &amp; total sum insured</div>
+            <div class="fire-policy-tabs" role="group" aria-label="Fire policy product">
+              <button type="button" data-fire-policy="sookshma" class="active" aria-pressed="true">Sookshma <small>Up to ₹5 Cr</small></button>
+              <button type="button" data-fire-policy="laghu" aria-pressed="false">Laghu <small>₹5–50 Cr</small></button>
+              <button type="button" data-fire-policy="sfsp" aria-pressed="false">SFSP / IAR <small>Above ₹50 Cr</small></button>
+              <button type="button" data-fire-policy="bgr" aria-pressed="false">Griha Raksha <small>Home cover</small></button>
+            </div>
+            <div class="section-grid">
+              <div class="field field-full"><label>Total Sum Insured (₹)</label><input type="number" id="fireSumInsured" min="0" inputmode="decimal" placeholder="e.g. 5000000"></div>
+              <div id="fireCommercialDetails" class="field-grid-contents">
+                <div class="field"><label>Policy period</label><select id="firePeriod"><option value="1">1 year</option><option value="2">2 years</option><option value="3">3 years</option></select></div>
+                <div class="field"><label>Occupancy from rate schedule</label><input type="search" id="fireOccupancy" list="fireOccupancyList" autocomplete="off" placeholder="Type e.g. Rice Mills, Office, Jute…"><datalist id="fireOccupancyList"></datalist></div>
+              </div>
+            </div>
+            <div class="fire-policy-hint" id="firePolicyHint">Select a product and enter the full Sum Insured.</div>
+            <div class="fire-rate-status" id="fireOccupancyStatus">Choose an occupancy from the schedule.</div>
+            <div id="fireBgrDetails" hidden>
+              <div class="section-grid" style="margin-top:12px">
+                <div class="field"><label>Home occupancy</label><select id="fireBGROcc"><option value="dwelling">Dwelling — Home Building / Contents</option><option value="coop">Co-operative Housing Society</option></select></div>
+                <div class="field"><label>Policy term</label><select id="fireBgrYears"><option value="1">1 year</option><option value="2">2 years</option><option value="3">3 years</option><option value="4">4 years</option><option value="5">5 years</option><option value="6">6 years</option><option value="7">7 years</option><option value="8">8 years</option><option value="9">9 years</option><option value="10">10 years</option></select></div>
+                <div class="field"><label>Short-period months (1-year term)</label><select id="fireBgrMonths"><option value="12">Full year</option><option value="1">Up to 15 days</option><option value="2">Up to 1 month</option><option value="3">Up to 2 months</option><option value="4">Up to 3 months</option><option value="5">Up to 4 months</option><option value="6">Up to 5 months</option><option value="7">Up to 6 months</option><option value="8">Up to 7 months</option><option value="9">Up to 8 months</option><option value="10">Up to 9 months</option></select></div>
+                <div class="field"><label>EQ zone (Co-op society)</label><select id="fireBgrZone"><option value="1">Zone 1</option><option value="2">Zone 2</option><option value="3">Zone 3</option><option value="4" selected>Zone 4</option></select></div>
+                <div class="field"><label>FLEXA discount (%)</label><input type="number" id="fireBgrDiscount" min="0" max="100" step="0.1" value="0"></div>
+                <div class="field"><label>FLEXA loading (%)</label><input type="number" id="fireBgrLoading" min="0" step="0.1" value="0"></div>
+                <div class="field"><label>Loss of rent SI (₹)</label><input type="number" id="fireBgrLor" min="0" inputmode="decimal" placeholder="Optional"></div>
+                <div class="field"><label>Alternative accommodation SI (₹)</label><input type="number" id="fireBgrAa" min="0" inputmode="decimal" placeholder="Optional"></div>
+                <div class="field"><label>PA persons</label><input type="number" id="fireBgrPa" min="0" value="0"></div>
+              </div>
+              <label class="fire-check fire-bgr-terror"><input type="checkbox" id="fireBgrTerror"><span><b>Terrorism</b><small>Optional BGR terrorism extension</small></span></label>
+            </div>
+          </div>
+
+          <div class="form-section" id="fireCommercialCoverSection">
+            <div class="form-section-title">2. Basic cover &amp; discount</div>
+            <div class="section-grid">
+              <div class="field"><label>FLEXA discount (%)</label><input type="number" id="fireFlexaDiscount" min="0" max="100" step="0.1" inputmode="decimal" value="0"><span class="op-hint">Capped automatically as per selected product / treaty status</span></div>
+              <div class="field"><label>STFI discount (%)</label><input type="number" id="fireSTFIDiscount" min="0" max="100" step="0.1" inputmode="decimal" value="0"></div>
+              <div class="field"><label>EQ discount (%)</label><input type="number" id="fireEQDiscount" min="0" max="100" step="0.1" inputmode="decimal" value="0"></div>
+              <div class="field"><label>Earthquake zone</label><select id="fireEQZone"><option value="1">Zone 1 — Very high</option><option value="2">Zone 2 — High</option><option value="3">Zone 3 — Moderate</option><option value="4" selected>Zone 4 — Low</option></select></div>
+            </div>
+            <div class="fire-option-grid">
+              <label class="fire-check"><input type="checkbox" id="fireSTFI" checked><span><b>STFI</b><small>Storm, tempest, flood &amp; inundation — class rate auto-selected</small></span></label>
+              <label class="fire-check"><input type="checkbox" id="fireEQ"><span><b>Earthquake</b><small>Zone / class rate auto-selected</small></span></label>
+              <label class="fire-check"><input type="checkbox" id="fireTerror" checked><span><b>Terrorism</b><small>IMTRIP pool rate 0.210‰; no discount</small></span></label>
+            </div>
+          </div>
+
+          <div class="form-section" id="fireAddonsSection">
+            <div class="form-section-title">3. Add-on covers</div>
+            <div class="section-grid">
+              <div class="field" id="fireAddonScheduleWrap" hidden><label>Tariff add-on schedule</label><select id="fireAddonSchedule"><option value="sfsp">SFSP</option><option value="iar">IAR</option><option value="dec">Declaration / Floater</option></select></div>
+              <div class="field"><label>Default add-on discount (%)</label><input type="number" id="fireAddonDiscount" min="0" max="100" step="0.1" inputmode="decimal" value="0"><span class="op-hint">Applies where an individual add-on discount is blank</span></div>
+              <div class="field"><label>Loss-limit override (₹, optional)</label><input type="number" id="fireAddonLimit" min="0" inputmode="decimal" placeholder="Schedule limit applies if blank"></div>
+            </div>
+            <div id="fireAddonRows" class="fire-addon-list"></div>
+          </div>
+
+          <p class="fire-error" id="fireError" role="alert" hidden></p>
+          <div class="btn-row"><button class="btn-primary" id="fireCalcBtn" type="button">⚡ Calculate Fire Premium</button></div>
+          <div class="op-result fire-result" id="fireResult" hidden></div>
+          <div class="btn-row no-print fire-pdf-row" id="firePdfRow" hidden>
+            <button class="btn-secondary" id="firePdfBtn" type="button">⬇️ Download Fire PDF (1-Page)</button>
+          </div>
+        </div>
+      </div>
+      <div class="op-pane" id="op-theft">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">🔐</div> Theft / Burglary Insurance</div></div>
+
+          <div class="form-section">
+            <div class="section-grid">
+              <div class="field"><label>Sum Insured (₹)</label><input type="number" id="tSI" placeholder="0"></div>
+              <div class="field"><label>Property Type</label>
+                <select id="tType">
+                  <option value="residence">Residence / Household</option>
+                  <option value="shop">Shop / Showroom</option>
+                  <option value="office">Office / Establishment</option>
+                  <option value="godown">Godown / Warehouse</option>
+                  <option value="jewellery">Jewellery / High value</option>
+                </select></div>
+              <div class="field"><label>Rate (per mille ‰) <span class="op-hint">editable</span></label><input type="number" step="0.01" id="tRate" value="0.60"></div>
+              <div class="field"><label>Money SI — safe/transit (₹)</label><input type="number" id="tMoneySI" placeholder="0"></div>
+              <div class="field"><label>Special Discount (%)</label><input type="number" id="tDiscount" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Options</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="tFirstLoss"> <span>First Loss basis (−25%)</span></label>
+              <label class="cb-row"><input type="checkbox" id="tRiot"> <span>Riot &amp; Strike extension (0.05‰)</span></label>
+              <label class="cb-row"><input type="checkbox" id="tMoney"> <span>Money insurance (2.00‰)</span></label>
+              <label class="cb-row"><input type="checkbox" id="tSafe"> <span>Burglar alarm / strong-room (−10%)</span></label>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="theftCalcBtn">⚡ Calculate Theft Premium</button></div>
+          <div class="op-result" id="theftResult" style="display:none;"></div>
+          <div class="btn-row no-print fire-pdf-row" id="theftPdfRow" hidden>
+            <button class="btn-secondary" id="theftPdfBtn" type="button">⬇️ Download Theft PDF (1-Page)</button>
+          </div>
+        </div>
+      </div>
+
+
+      <p class="op-note">⚠️ Fire rates and formulas are for quotation support. They must be checked against the live underwriting circular, inspection requirements and issuing-office approval before policy issuance.</p>
+    </section>
+
+    <!-- ============== TAB · PERSONAL ACCIDENT ============== -->
+    <section class="tab-content" id="tab-pa">
+      <div class="op-pane active" id="op-pa">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">🧍</div> Personal Accident (PA)</div></div>
+
+          <div class="form-section">
+            <div class="section-grid">
+              <div class="field"><label>Capital Sum Insured / person (₹)</label><input type="number" id="pCSI" placeholder="0"></div>
+              <div class="field"><label>Plan</label>
+                <select id="pPlan">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="i">Table I — Death only (0.45‰)</option>
+                  <option value="ii">Table II — Death + PTD + PPD (1.00‰)</option>
+                  <option value="iii">Table III — Death + PTD + PPD + TTD (1.50‰)</option>
+                </select></div>
+              <div class="field"><label>Risk Group</label>
+                <select id="pRisk">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">Risk I — Admin / Clerical (no loading)</option>
+                  <option value="2">Risk II — Manual, non-hazardous (+25%)</option>
+                  <option value="3">Risk III — Hazardous work (+50%)</option>
+                </select></div>
+              <div class="field"><label>Rate (per mille ‰) <span class="op-hint">editable</span></label><input type="number" step="0.01" id="pRate" placeholder="Plan chunne par auto"></div>
+              <div class="field"><label>No. of Persons</label><input type="number" id="pMembers" value="1"></div>
+              <div class="field"><label>Age (yrs)</label><input type="number" id="pAge" placeholder="0"></div>
+              <div class="field"><label>Claim-free Years (for CB)</label><input type="number" id="pCbYears" value="0" min="0" max="10" placeholder="0"></div>
+              <div class="field"><label>Policy Term</label>
+                <select id="pTerm">
+                  <option value="" selected disabled>-- Select --</option><option value="1">1 Year</option><option value="2">2 Years</option><option value="3">3 Years</option></select></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Riders</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="pMedExt"> <span>Medical Expenses Extension</span></label>
+            </div>
+            <div class="field" id="pMedExtWrap" style="display:none; margin-top:10px; padding:10px 12px; border-left:3px solid #f59e0b; background:rgba(245,158,11,.08); border-radius:8px;">
+              <label style="font-size:10px;font-weight:700;color:#92400e;">Medical Extension %</label>
+              <select id="pMedExtPct">
+                <option value="10" selected>+10% premium → covers 25% of claim</option>
+                <option value="25">+25% premium → covers 50% of claim</option>
+              </select>
+              <span style="font-size:10px;color:var(--text-3);display:block;margin-top:3px;">Clause (j) — loading on basic accident premium.</span>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="paCalcBtn">⚡ Calculate PA Premium</button></div>
+          <div class="op-result" id="paResult" style="display:none;"></div>
+          <div class="op-result" id="paBenefits" style="display:none;margin-top:14px;"></div>
+          <div class="btn-row no-print hq-gen" id="paGenRow" style="display:none">
+            <button class="btn-secondary" id="paShare">📤 Share</button>
+            <button class="btn-primary" id="paGen">📄 Generate Quotation</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="op-note">⚠️ Ye rates <strong>indicative / guideline</strong> hain (de-tariffed market). Har rate field editable hai — apni company ka exact rate daal kar calculate karein.</p>
+    </section>
+
+    <!-- ============== TAB · MEDICLAIM ============== -->
+    <section class="tab-content" id="tab-med">
+
+      <div class="op-tabs" id="medOpTabs" style="display:none;">
+        <button class="op-tab active" data-op="yec">🌱 Youth Eco Care</button>
+        <button class="op-tab" data-op="ossp">🛡️ Sampoorna Swasthya Suraksha</button>
+        <button class="op-tab" data-op="hff">👨‍👩‍👧 Happy Family Floater</button>
+        <button class="op-tab" data-op="stu">⬆️ Super Health Top-Up</button>
+      </div>
+
+
+
+      <!-- ---------- ORIENTAL YOUTH ECO CARE ---------- -->
+      <div class="op-pane active" id="op-yec">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">🌱</div> Oriental Youth Eco Care Policy</div></div>
+
+          <p class="op-note" style="margin:0 0 14px;">
+            UIN: <strong>OICHLIP24034V012324</strong> · Entry age <strong>18–45 yrs</strong> ·
+            SI <strong>₹3 lakh – ₹1 crore</strong> · 1-year term, lifelong renewable ·
+            Rates official chart se · <strong>GST exempt — koi tax add nahi hota.</strong>
+          </p>
+
+          <div class="form-section">
+            <div class="form-section-title">Plan &amp; Sum Insured</div>
+            <div class="section-grid">
+              <div class="field"><label>Plan</label>
+                <select id="yecPlan">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="basic">Basic Plan</option>
+                  <option value="premium">Premium Plan (+ Maternity, ART, Daily Cash, 2nd Opinion)</option>
+                </select></div>
+              <div class="field"><label>Sum Insured</label><select id="yecSI"></select></div>
+              <div class="field"><label>Cover Basis</label>
+                <select id="yecMode">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="individual">Individual</option>
+                  <option value="floater">Family Floater</option>
+                  <option value="ff">Floater with Floater</option>
+                </select></div>
+              <div class="field"><label>No. of Members</label>
+                <select id="yecMembers">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">1</option><option value="2">2</option>
+                  <option value="3">3</option><option value="4">4</option>
+                  <option value="5">5</option><option value="6">6</option>
+                </select></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Member Ages </div>
+            <div class="section-grid">
+              <div class="field" id="yecMemWrap1"><label>Member 1 age</label><input type="number" id="yecAge1" placeholder="30"></div>
+              <div class="field" id="yecMemWrap2"><label>Member 2 age</label><input type="number" id="yecAge2" placeholder="28"></div>
+              <div class="field" id="yecMemWrap3" style="display:none;"><label>Member 3 age</label><input type="number" id="yecAge3"></div>
+              <div class="field" id="yecMemWrap4" style="display:none;"><label>Member 4 age</label><input type="number" id="yecAge4"></div>
+              <div class="field" id="yecMemWrap5" style="display:none;"><label>Member 5 age</label><input type="number" id="yecAge5"></div>
+              <div class="field" id="yecMemWrap6" style="display:none;"><label>Member 6 age</label><input type="number" id="yecAge6"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Discounts</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="yecOnline"> <span>Online discount — 10% (max ₹2,000)</span></label>
+              <label class="cb-row"><input type="checkbox" id="yecNoTPA"> <span>TPA services NOT opted — 5.5%</span></label>
+              <label class="cb-row"><input type="checkbox" id="yecFamily"> <span>Family discount — 10% (2+ members)</span></label>
+              <label class="cb-row"><input type="checkbox" id="yecCBLieu"> <span>In lieu of Cumulative Bonus — 2%</span></label>
+            </div>
+            <div class="section-grid" style="margin-top:10px;">
+              <div class="field"><label>Manual adjustment (%) <span class="op-hint">+ loading / − discount</span></label>
+                <input type="number" id="yecAdj" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="yecCalcBtn">⚡ Calculate Youth Eco Care Premium</button></div>
+          <div class="op-result" id="yecResult" style="display:none;"></div>
+          <div class="op-result" id="yecBenefits" style="display:none;margin-top:14px;"></div>
+                    <div class="btn-row no-print hq-gen" id="yecGenRow" style="display:none;margin-top:14px;">
+            <button class="btn-secondary" id="yecShare">📤 Share</button>
+            <button class="btn-primary" id="yecGen">📄 Generate Quotation →</button>
+          </div>
+          <div class="op-tax" id="yecTaxTip" style="display:none;"></div>
+        </div>
+      </div>
+
+
+      <!-- ---------- ORIENTAL SAMPOORNA SWASTHYA SURAKSHA ---------- -->
+      <div class="op-pane" id="op-ossp">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">🛡️</div> Oriental Sampoorna Swasthya Suraksha</div></div>
+
+          <p class="op-note" style="margin:0 0 14px;">
+            UIN: <strong>OICHLIP26035V012526</strong> · Entry age <strong>18+ (no max)</strong> ·
+            SI <strong>₹1 lakh – ₹500 lakh</strong> · 3 plans × 2 zones × 6 payment options ·
+            lifelong renewable · <strong>GST exempt.</strong>
+          </p>
+
+          <div class="form-section">
+            <div class="form-section-title">Plan · Zone · Payment</div>
+            <div class="section-grid">
+              <div class="field"><label>Plan</label>
+                <select id="osPlan">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="premium">PREMIUM Plan</option>
+                  <option value="elite">ELITE Plan (+ Maternity, Health check-up)</option>
+                  <option value="royal">ROYAL Plan (+ Oncology abroad, actual room)</option>
+                </select></div>
+              <div class="field"><label>Zone</label>
+                <select id="osZone">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">Zone I — Guj, Mumbai, Chennai, Blr, Pune, Delhi NCR</option>
+                  <option value="2">Zone II — Rest of India</option>
+                </select></div>
+              <div class="field"><label>Payment Option</label>
+                <select id="osMode">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="annual">Annual (1 year)</option>
+                  <option value="2yr">2-Year term (biennial)</option>
+                  <option value="3yr">3-Year term (triennial)</option>
+                  <option value="half">Half-Yearly instalment</option>
+                  <option value="quarterly">Quarterly instalment</option>
+                  <option value="monthly">Monthly instalment</option>
+                </select></div>
+              <div class="field"><label>Sum Insured</label><select id="osSI"></select></div>
+              <div class="field"><label>Cover Basis</label>
+                <select id="osBasis">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="individual">Individual</option>
+                  <option value="floater">Floater</option>
+                  <option value="ff">Floater within Floater</option>
+                </select></div>
+              <div class="field"><label>No. of Members</label>
+                <select id="osMembers">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">1</option><option value="2">2</option>
+                  <option value="3">3</option><option value="4">4</option>
+                  <option value="5">5</option><option value="6">6</option>
+                </select></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Member Ages </div>
+            <div class="section-grid">
+              <div class="field" id="osMemWrap1"><label>Member 1 age</label><input type="number" id="osAge1" placeholder="35"></div>
+              <div class="field" id="osMemWrap2"><label>Member 2 age</label><input type="number" id="osAge2" placeholder="32"></div>
+              <div class="field" id="osMemWrap3" style="display:none;"><label>Member 3 age</label><input type="number" id="osAge3"></div>
+              <div class="field" id="osMemWrap4" style="display:none;"><label>Member 4 age</label><input type="number" id="osAge4"></div>
+              <div class="field" id="osMemWrap5" style="display:none;"><label>Member 5 age</label><input type="number" id="osAge5"></div>
+              <div class="field" id="osMemWrap6" style="display:none;"><label>Member 6 age</label><input type="number" id="osAge6"></div>
+            </div>
+            <div class="checkbox-grid" style="margin-top:10px;">
+              <label class="cb-row" id="osAgeLoadRow"><input type="checkbox" id="osAgeLoad" disabled>
+                <span>Age loading — <strong id="osAgeLoadTxt">koi member 66+ nahi</strong></span></label>
+            </div>
+            <div class="op-hint" id="osAgeLoadDetail" style="display:none;margin-top:8px;"></div>
+            
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Discounts &amp; Optional Covers</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="osOnline"> <span>Online discount — 10% (max ₹5,000)</span></label>
+              <label class="cb-row"><input type="checkbox" id="osNoTPA"> <span>TPA services NOT opted — 5.5%</span></label>
+              <label class="cb-row"><input type="checkbox" id="osFamily"> <span>Family discount — 5% (2+ members)</span></label>
+              <label class="cb-row"><input type="checkbox" id="osLongTerm"> <span>Long-term policy discount — 5%</span></label>
+              <label class="cb-row"><input type="checkbox" id="osClaimFree"> <span>3 years claim-free (reduced age loading)</span></label>
+              <label class="cb-row"><input type="checkbox" id="osPA"> <span>Personal Accident cover (₹50 / lakh / person)</span></label>
+            </div>
+
+            <div class="section-grid" style="margin-top:12px;">
+              <div class="field"><label>Migration Discount</label>
+                <select id="osMigration">
+                  <option value="none" selected>Not a migration case</option>
+                  <option value="same">Same Sum Insured — 5%</option>
+                  <option value="higher">Higher Sum Insured — 10%</option>
+                </select></div>
+
+              <div class="field"><label>Room Rent Upgradation</label>
+                <select id="osRoomUp">
+                  <option value="none">Not opted</option>
+                  <option value="50">Option 1 — 50% enhancement</option>
+                  <option value="100">Option 2 — 100% enhancement</option>
+                </select>
+                <div class="op-hint" id="osRoomUpNote" style="display:none;margin-top:5px;"></div></div>
+
+              <div class="field"><label>PED Waiting Period Buyback</label>
+                <select id="osPedBuy">
+                  <option value="none">Not opted</option>
+                </select>
+                <div class="op-hint" id="osPedNote" style="display:none;margin-top:5px;"></div></div>
+            </div>
+            <div class="section-grid" id="osPAWrap" style="display:none;margin-top:10px;">
+              <div class="field"><label>PA Sum Insured (₹) <span class="op-hint">blank = same as health SI</span></label>
+                <input type="number" id="osPASI" placeholder="auto"></div>
+              <div class="field"><label>PA rate per lakh (₹) <span class="op-hint">editable</span></label>
+                <input type="number" id="osPARate" placeholder="50"></div>
+            </div>
+            <div class="section-grid" style="margin-top:10px;">
+              <div class="field"><label>Manual adjustment (%) <span class="op-hint">+ loading / − discount</span></label>
+                <input type="number" id="osAdj" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="osCalcBtn">⚡ Calculate OSSP Premium</button></div>
+          <div class="op-result" id="osResult" style="display:none;"></div>
+          <div class="op-result" id="osBenefits" style="display:none;margin-top:14px;"></div>
+                    <div class="btn-row no-print hq-gen" id="osGenRow" style="display:none;margin-top:14px;">
+            <button class="btn-secondary" id="osShare">📤 Share</button>
+            <button class="btn-primary" id="osGen">📄 Generate Quotation →</button>
+          </div>
+          <div class="op-tax" id="osTaxTip" style="display:none;"></div>
+        </div>
+      </div>
+
+
+      <!-- ---------- OICL HAPPY FAMILY FLOATER 2024 ---------- -->
+      <div class="op-pane" id="op-hff">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">👨‍👩‍👧</div> OICL Happy Family Floater Policy 2024</div></div>
+
+          <p class="op-note" style="margin:0 0 14px;">
+            UIN: <strong>OICHLIP25046V062425</strong> · Floater SI <strong>₹1 – 50 lakh</strong> ·
+            4 plans · <strong>minimum 2 persons</strong> · max entry age 65 (70 conditional) ·
+            1-year term, renewable lifelong · <strong>GST exempt.</strong>
+          </p>
+
+          <div class="form-section">
+            <div class="form-section-title">Plan &amp; Sum Insured</div>
+            <div class="section-grid">
+              <div class="field"><label>Plan</label>
+                <select id="hfPlan">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="silver">SILVER — ₹1 to 5 lakh (zone-rated)</option>
+                  <option value="gold">GOLD — ₹6 to 10 lakh</option>
+                  <option value="diamond">DIAMOND — ₹12 to 20 lakh (+ Maternity)</option>
+                  <option value="platinum">PLATINUM — ₹25 to 50 lakh (+ Maternity)</option>
+                </select></div>
+              <div class="field" id="hfZoneWrap"><label>Zone <span class="op-hint">Silver plan only</span></label>
+                <select id="hfZone">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">Zone I</option>
+                  <option value="2">Zone II</option>
+                </select></div>
+              <div class="field"><label>Sum Insured (floater)</label><select id="hfSI"></select></div>
+              <div class="field"><label>No. of Members</label>
+                <select id="hfMembers">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="2">2</option><option value="3">3</option>
+                  <option value="4">4</option><option value="5">5</option>
+                  <option value="6">6</option>
+                </select></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Member Ages </div>
+            <div class="section-grid">
+              <div class="field" id="hfMemWrap1"><label>Member 1 age</label><input type="number" id="hfAge1" placeholder="38"></div>
+              <div class="field" id="hfMemWrap2"><label>Member 2 age</label><input type="number" id="hfAge2" placeholder="35"></div>
+              <div class="field" id="hfMemWrap3" style="display:none;"><label>Member 3 age</label><input type="number" id="hfAge3"></div>
+              <div class="field" id="hfMemWrap4" style="display:none;"><label>Member 4 age</label><input type="number" id="hfAge4"></div>
+              <div class="field" id="hfMemWrap5" style="display:none;"><label>Member 5 age</label><input type="number" id="hfAge5"></div>
+              <div class="field" id="hfMemWrap6" style="display:none;"><label>Member 6 age</label><input type="number" id="hfAge6"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Add-on Covers </div>
+            <div class="section-grid">
+              <div class="field"><label>Restoration of Sum Insured</label>
+                <select id="hfRestore">
+                  <option value="none">Not opted</option>
+                  <option value="50">Option 1 — 50% restoration</option>
+                  <option value="100">Option 2 — 100% restoration</option>
+                </select></div>
+              <div class="field"><label>Waiver of Proportionate Clause</label>
+                <select id="hfWaiver">
+                  <option value="none">Not opted</option>
+                  <option value="50">Option 1 — 50%</option>
+                  <option value="100">Option 2 — 100%</option>
+                </select></div>
+              <div class="field"><label>Life Hardship Survival Benefit</label>
+                <select id="hfLHSB">
+                  <option value="none">Not opted</option>
+                  <option value="a">Plan A — 3% of basic premium</option>
+                  <option value="b">Plan B — 5% of basic premium</option>
+                </select></div>
+            </div>
+            <div class="checkbox-grid" style="margin-top:10px;">
+              <label class="cb-row" id="hfCopayWrap"><input type="checkbox" id="hfCopayRem"> <span>Removal of Co-Pay — +17% (Silver only)</span></label>
+              <label class="cb-row"><input type="checkbox" id="hfPA"> <span>Personal Accident cover (₹60 / lakh / person)</span></label>
+            </div>
+            <div class="section-grid" id="hfPAWrap" style="display:none;margin-top:10px;">
+              <div class="field"><label>PA Sum Insured (₹) <span class="op-hint">blank = same as health SI</span></label>
+                <input type="number" id="hfPASI" placeholder="auto"></div>
+              <div class="field"><label>PA rate per lakh (₹) <span class="op-hint">editable</span></label>
+                <input type="number" id="hfPARate" placeholder="60"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Discounts</div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="hfOnline"> <span>Online discount — 10% (max ₹2,000)</span></label>
+              <label class="cb-row"><input type="checkbox" id="hfNoTPA"> <span>TPA services NOT opted — 5.5%</span></label>
+            </div>
+            <div class="section-grid" style="margin-top:10px;">
+              <div class="field"><label>Manual adjustment (%) <span class="op-hint">+ loading / − discount</span></label>
+                <input type="number" id="hfAdj" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="hfCalcBtn">⚡ Calculate Happy Family Floater Premium</button></div>
+          <div class="op-result" id="hfResult" style="display:none;"></div>
+          <div class="op-result" id="hfBenefits" style="display:none;margin-top:14px;"></div>
+                    <div class="btn-row no-print hq-gen" id="hfGenRow" style="display:none;margin-top:14px;">
+            <button class="btn-secondary" id="hfShare">📤 Share</button>
+            <button class="btn-primary" id="hfGen">📄 Generate Quotation →</button>
+          </div>
+          <div class="op-tax" id="hfTaxTip" style="display:none;"></div>
+        </div>
+      </div>
+
+
+      <!-- ---------- ORIENTAL SUPER HEALTH TOP-UP ---------- -->
+      <div class="op-pane" id="op-stu">
+        <div class="card">
+          <div class="card-header"><div class="card-title">
+            <div class="card-title-icon">⬆️</div> Oriental Super Health Top-Up 2024</div></div>
+
+          <p class="op-note" style="margin:0 0 14px;">
+            UIN: <strong>OICHLIP25042V042425</strong> · High-deductible top-up ·
+            17 official Deductible/SI combinations · max entry age 65 (66–70 with 10% loading) ·
+            <strong>GST exempt.</strong><br>
+            ⚠️ Claim tabhi trigger hota hai jab policy period ka <strong>aggregate claim deductible se upar</strong> chala jaaye.
+          </p>
+
+          <div class="form-section">
+            <div class="form-section-title">Plan &amp; Deductible / Sum Insured</div>
+            <div class="section-grid">
+              <div class="field"><label>Plan</label>
+                <select id="stPlan">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="individual">Individual (each member own SI)</option>
+                  <option value="floater">Family Floater (min 2 persons)</option>
+                </select></div>
+              <div class="field" style="grid-column:span 2;"><label>Deductible → Sum Insured</label>
+                <select id="stCombo"></select></div>
+              <div class="field"><label>No. of Members</label>
+                <select id="stMembers">
+                  <option value="" selected disabled>-- Select --</option>
+                  <option value="1">1</option><option value="2">2</option>
+                  <option value="3">3</option><option value="4">4</option>
+                  <option value="5">5</option><option value="6">6</option>
+                </select></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Member Ages
+              </div>
+            <div class="section-grid">
+              <div class="field" id="stMemWrap1"><label>Member 1 age</label><input type="number" id="stAge1" placeholder="40"></div>
+              <div class="field" id="stMemWrap2"><label>Member 2 age</label><input type="number" id="stAge2" placeholder="37"></div>
+              <div class="field" id="stMemWrap3" style="display:none;"><label>Member 3 age</label><input type="number" id="stAge3"></div>
+              <div class="field" id="stMemWrap4" style="display:none;"><label>Member 4 age</label><input type="number" id="stAge4"></div>
+              <div class="field" id="stMemWrap5" style="display:none;"><label>Member 5 age</label><input type="number" id="stAge5"></div>
+              <div class="field" id="stMemWrap6" style="display:none;"><label>Member 6 age</label><input type="number" id="stAge6"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Step 1 — Loadings </div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="stEntryLoad"> <span>Entry-age loading +10% (members aged 66–70)</span></label>
+              <label class="cb-row"><input type="checkbox" id="stRoomRemove"> <span>Remove room-rent limit (+20% / +10% / +5% by deductible)</span></label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Step 2 — Discounts </div>
+            <div class="checkbox-grid">
+              <label class="cb-row"><input type="checkbox" id="stFamily"> <span>Family discount 10% (Individual plan, 2+ members)</span></label>
+              <label class="cb-row"><input type="checkbox" id="stLoyalty"> <span>Loyalty discount 10% (existing OICL base health policy)</span></label>
+              <label class="cb-row"><input type="checkbox" id="stStaff"> <span>Staff discount 33% (serving / retired — family &amp; loyalty block ho jaate hain)</span></label>
+              <label class="cb-row"><input type="checkbox" id="stPortal"> <span>Portal discount 10% (max ₹2,000 — fresh policy only)</span></label>
+            </div>
+            <div class="section-grid" style="margin-top:10px;">
+              <div class="field"><label>Manual adjustment (%) <span class="op-hint">+ loading / − discount</span></label>
+                <input type="number" id="stAdj" placeholder="0"></div>
+            </div>
+          </div>
+
+          <div class="btn-row"><button class="btn-primary" id="stCalcBtn">⚡ Calculate Super Top-Up Premium</button></div>
+          <div class="op-result" id="stResult" style="display:none;"></div>
+          <div class="op-result" id="stBenefits" style="display:none;margin-top:14px;"></div>
+                    <div class="btn-row no-print hq-gen" id="stGenRow" style="display:none;margin-top:14px;">
+            <button class="btn-secondary" id="stShare">📤 Share</button>
+            <button class="btn-primary" id="stGen">📄 Generate Quotation →</button>
+          </div>
+          <div class="op-tax" id="stTaxTip" style="display:none;"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============== TAB · HEALTH QUOTATION ============== -->
+    <section class="tab-content" id="tab-hquote">
+      <div class="quote-toolbar no-print">
+        <button class="btn-secondary" id="hqBack">← Back to Calculator</button>
+        <button class="btn-secondary" id="hqShare">📤 Share</button>
+        <button class="btn-primary" id="hqPrint">⬇️ Download PDF (1-Page)</button>
+      </div>
+
+      <div id="hqDoc" class="quote-doc">
+        <div class="doc-watermark" aria-hidden="true"></div>
+
+        <div class="quote-head">
+          <div>
+            <div class="logo-circle">OIC</div>
+            <div class="brand-title">ORIENTAL INSURANCE COMPANY LTD</div>
+          </div>
+          <div class="quote-no">
+            <div class="quote-no-label" id="hqKindLabel">Health Quotation</div>
+            <div id="hqNumber" class="quote-num">0000</div>
+            <div style="font-size:10px;color:#64748b;margin-top:4px;">Date: <b id="hqDateTop" style="color:#0a2540;">—</b></div>
+          </div>
+        </div>
+
+        <div style="background:#0a2540;color:#fff;padding:10px 16px;border-radius:10px;margin-bottom:14px;">
+          <span id="hqProduct" style="font-size:14px;font-weight:700;">—</span>
+          <span style="float:right;font-size:10px;opacity:.85;">UIN: <span id="hqUin">—</span></span>
+        </div>
+
+        <div class="quote-summary">
+          <div class="qs-title">Premium Summary</div>
+          <div class="qs-grid">
+            <div class="qs-item"><span>Base Premium</span><b id="hqBaseTop">₹ 0</b></div>
+            <div class="qs-item"><span>Net Premium</span><b id="hqNetTop">₹ 0</b></div>
+            <div class="qs-item"><span>GST</span><b id="hqGstTop">NIL — Exempt</b></div>
+            <div class="qs-item qs-grand"><span>Net Premium Payable</span><b id="hqPayableTop">₹ 0</b></div>
+          </div>
+        </div>
+
+        <div class="quote-meta" id="hqMeta"></div>
+
+        <h3 class="card-title" style="font-size:14px;margin:18px 0 8px;">Premium Breakdown</h3>
+        <table class="breakdown-table" id="hqTable">
+          <thead><tr><th>Particulars</th><th class="right">Amount</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <div id="hqCoversWrap" style="display:none;">
+          <h3 class="card-title" style="font-size:14px;margin:18px 0 8px;">Key Covers &amp; Sub-limits</h3>
+          <table class="breakdown-table" id="hqCovers"><tbody></tbody></table>
+        </div>
+
+        <table class="final-table">
+          <tbody>
+            <tr class="bold"><td>Total Premium</td><td class="right num" id="hqTotal">₹ 0</td></tr>
+            <tr><td>GST (Health insurance)</td><td class="right num">NIL — Exempt</td></tr>
+            <tr class="grand"><td>Net Premium Payable</td><td class="right num" id="hqNet">₹ 0</td></tr>
+          </tbody>
+        </table>
+
+        <div id="hqNote" style="font-size:11px;color:#475569;margin-top:12px;"></div>
+
+        <div class="quote-foot">
+          <div class="sig-block"><div>Signature</div><div class="sig-line"></div></div>
+          <div class="sig-block"><div>Name of Agent / Agency Code</div><div class="sig-line"></div></div>
+          <div class="sig-block"><div>Branch / Divisional Manager</div><div class="sig-line"></div></div>
+        </div>
+
+        <div class="disclaimer">
+          Disclaimer: Premium computed as per official OICL premium chart. Final premium is subject to
+          underwriting, medical examination (if applicable) &amp; terms in force on the date of policy
+          issuance. <strong>Health insurance premium is exempt from GST.</strong><br>
+          <strong>Generated: <span id="hqGeneratedAt">—</span> · Customized by Mohit Sharma · © 2026 Mohit Sharma. All Rights Reserved.</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== TAB · ABOUT ============== -->
+    <section class="tab-content" id="tab-about">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon">ℹ️</div>
+            OICL Premium Calculator V31.0
+          </div>
+        </div>
+
+        <p style="font-size:14px;color:var(--text-2);margin-bottom:16px;line-height:1.6;">
+          <strong>Oriental Insurance Company Ltd.</strong><br>
+          Premium Calculator · Motor · Fire &amp; Theft · PA · Mediclaim<br>
+          All India Notified IRDAI Rates Apply.
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;">📋 Motor — Policy Types</h3>
+        <ul class="bullet">
+          <li><strong>Package Policy</strong> — OD + TP (1 Year)</li>
+          <li><strong>Bundle Policy</strong> — OD + TP (3 Years for Car / 5 Years for 2W)</li>
+          <li><strong>Standard OD (SAOD)</strong> — Standalone Own Damage only</li>
+          <li><strong>Liability Only</strong> — Third Party cover only</li>
+        </ul>
+        <p style="font-size:12px;color:var(--text-3);margin:-4px 0 0;">
+          Private Car &amp; Two Wheeler me chaaron available hain. Commercial vehicles
+          (Taxi, Bus / PCCV, Goods Vehicle, Class D) me sirf <strong>Package</strong> aur
+          <strong>Liability Only</strong> hote hain.
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;margin-top:20px;">🚗 Vehicle Classes</h3>
+        <ul class="bullet">
+          <li><strong>Private Car</strong> — Petrol / Diesel / CNG &amp; Electric</li>
+          <li><strong>Two Wheeler</strong> — Petrol &amp; Electric</li>
+          <li><strong>Taxi / PCCV</strong> — upto 6 seats</li>
+          <li><strong>Bus / PCCV</strong> — School Bus, Staff Bus, 6–17 / 17–36 / above 36 seats</li>
+          <li><strong>Class D</strong> — Ambulance, Misc – Domestic (MISC D)</li>
+          <li><strong>Goods Vehicle</strong> — GCCV (GVW-wise) &amp; 3-Wheeler</li>
+        </ul>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;margin-top:20px;">🏥 Health &amp; Other Products</h3>
+        <ul class="bullet">
+          <li><strong>Youth Eco Care</strong> — UIN OICHLIP24034V012324</li>
+          <li><strong>Sampoorna Swasthya</strong> — UIN OICHLIP26035V012526 (Premium / Elite / Royal)</li>
+          <li><strong>Happy Family Floater 2024</strong> — UIN OICHLIP25046V062425 (Silver / Gold / Diamond / Platinum)</li>
+          <li><strong>Super Health Top-Up 2024</strong> — UIN OICHLIP25042V042425</li>
+          <li><strong>Personal Accident</strong> — Table I / II / III, Risk Group I–III</li>
+          <li><strong>Fire &amp; Allied Perils</strong> · <strong>Theft / Burglary</strong></li>
+        </ul>
+        <p style="font-size:12px;color:var(--text-3);margin:-4px 0 0;">
+          Health aur Personal Accident premium par <strong>GST applicable nahi</strong> hai.
+          Motor, Fire aur Theft par 18% GST lagta hai.
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;margin-top:20px;">📧 Contact</h3>
+        <p style="font-size:13px;color:var(--text-2);">
+          For any query, drop a mail:<br>
+          <strong style="color:var(--primary);">kingsharma7400@gmail.com</strong>
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;margin-top:20px;">👤 Customized By</h3>
+        <p style="font-size:13px;color:var(--text-2);">
+          This calculator was built &amp; customized by <strong style="color:var(--primary);">Mohit sharma</strong>.
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;margin-top:20px;">✨ What's new</h3>
+        <div class="pro-feature-grid">
+          <div class="pro-feature"><b>🏥 Health Products</b><span>Youth Eco Care, Sampoorna Swasthya, Happy Family Floater &amp; Super Top-Up.</span></div>
+          <div class="pro-feature"><b>📄 Health Quotation</b><span>Motor jaisa 1-page A4 quotation, PDF download &amp; share.</span></div>
+          <div class="pro-feature"><b>🧍 PA Quotation</b><span>Personal Accident ka bhi apna quotation &amp; share button.</span></div>
+          <div class="pro-feature"><b>🕘 Quote History</b><span>Every calculation auto-saves with search, filters &amp; stats.</span></div>
+          <div class="pro-feature"><b>⬇️ CSV Export</b><span>One-click backup of all quotes for Excel / records.</span></div>
+          <div class="pro-feature"><b>🌙 Dark Mode</b><span>Eye-friendly theme toggle in the top bar.</span></div>
+        </div>
+
+        <div class="note">
+          <strong>OICL Premium Calculator</strong><br>
+          All rates as per IRDAI guidelines.
+          Health premium official OICL charts se.
+        </div>
+      </div>
+    </section>
+
+  <footer class="footer">
+    <div>© 2026 Mohit Sharma. All Rights Reserved. · OICL Premium Calculator V31.0 · 2026 Edition.</div>
+    <small class="unofficial-tool-notice">Unofficial internal calculation tool — not an official OICL application.</small>
+  </footer>
+
+  </main>
+
+</div>
+
+
+  <!-- PRO: toasts -->
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+  <!-- ============== SHARE MODAL ============== -->
+  <div id="shareModal" class="modal-overlay" style="display:none;">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Share Quotation">
+      <h3 class="modal-title">📤 Share Quotation</h3>
+      <p class="modal-sub">Choose how you want to share this quotation:</p>
+      <div class="share-options">
+        <button id="sharePdfFile" class="btn-share btn-whatsapp" type="button">
+          <span class="share-ico">📤</span> Share as PDF (1-Page A4)
+        </button>
+        <button id="sharePdf" class="btn-share btn-pdf" type="button">
+          <span class="share-ico">⬇️</span> Download PDF (1-Page A4)
+        </button>
+      </div>
+      <button id="shareCancel" class="btn-secondary modal-cancel" type="button">Cancel</button>
+    </div>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="commission_rates.js"></script>
+<script src="rates.js"></script>
+<script src="app.js"></script>
+<script src="product-pdf.js"></script>
+<script src="fire-data.js"></script>
+<script src="fire.js"></script>
+<script src="more-products-rates.js"></script>
+<script src="more-products.js"></script>
+<script src="history.js"></script>
+<script src="pro.js"></script>
+  <script src="other.js"></script>
+  <script src="youth_eco_care.js"></script>
+  <script src="ossp_rates.js"></script>
+  <script src="ossp.js"></script>
+  <script src="hff_rates.js"></script>
+  <script src="hff.js"></script>
+  <script src="stu_rates.js"></script>
+  <script src="stu.js"></script>
+  <script src="med-nav.js"></script>
+  <script src="health-quote.js"></script>
+  <script src="excel-export.js"></script>
+</body>
+</html>
+
